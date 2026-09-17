@@ -1,0 +1,2284 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CYBER BATH — SOC Training Lab</title>
+
+    <!-- Firebase -->
+    <script type="module">
+    /*
+    ============================================================
+    🔥 FIREBASE CONFIG
+    ============================================================
+
+    بعد إنشاء مشروع Firebase:
+    1. افتحي Project Settings
+    2. أضيفي Web App
+    3. انسخي firebaseConfig
+    4. ضعي القيم مكان القيم الموجودة هنا
+
+    ثم فعّلي:
+    Firestore Database
+    ============================================================
+    */
+
+    import { initializeApp } from
+    "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+    import {
+        getFirestore,
+        doc,
+        setDoc,
+        getDoc
+    } from
+    "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAafGYlNphbg9Wx4lycEI9Ah9AKICkUwU0",
+            authDomain: "linuxcommand-324f7.firebaseapp.com",
+            projectId: "linuxcommand-324f7",
+            storageBucket: "linuxcommand-324f7.firebasestorage.app",
+            messagingSenderId: "208107976618",
+            appId: "1:208107976618:web:9b95b652c1c69dbeff9dd3",
+            measurementId: "G-DZDNX3M4WH"
+        };
+
+    try {
+
+        const app = initializeApp(firebaseConfig);
+
+        window.db = getFirestore(app);
+
+        window.firebaseReady = true;
+
+        console.log("Firebase connected.");
+
+    } catch (error) {
+
+        console.log("Firebase is not configured yet.");
+
+        window.firebaseReady = false;
+    }
+    </script>
+
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+        :root {
+            --bg: #061014;
+            --panel: #0c171d;
+            --panel2: #101f27;
+            --border: #1c3941;
+            --green: #3cff7a;
+            --green2: #16c95a;
+            --text: #e8f4f7;
+            --muted: #81979f;
+            --yellow: #ffc857;
+            --red: #ff5570;
+            --blue: #4db8ff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: radial-gradient(circle at 20% 10%, rgba(60,255,122,.08), transparent 25%), radial-gradient(circle at 80% 30%, rgba(77,184,255,.05), transparent 25%), var(--bg);
+            color: var(--text);
+            font-family: "Cairo",sans-serif;
+            min-height: 100vh;
+        }
+
+            body::before {
+                content: "";
+                position: fixed;
+                inset: 0;
+                pointer-events: none;
+                opacity: .08;
+                background-image: linear-gradient(rgba(255,255,255,.15) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.15) 1px, transparent 1px);
+                background-size: 40px 40px;
+            }
+
+        .container {
+            width: min(1200px,94%);
+            margin: auto;
+        }
+
+        /* ================= HEADER ================= */
+
+        header {
+            padding: 25px 0;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: rgba(6,16,20,.92);
+            backdrop-filter: blur(12px);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            font-family: "JetBrains Mono";
+            font-size: 24px;
+            color: var(--green);
+            font-weight: 800;
+        }
+
+            .logo span {
+                color: #b8cbd0;
+            }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--green);
+            font-size: 13px;
+        }
+
+        .dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 12px var(--green);
+        }
+
+        /* ================= HERO ================= */
+
+        .hero {
+            margin-top: 35px;
+            padding: 55px;
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            background: linear-gradient( 145deg, rgba(16,31,39,.95), rgba(7,18,23,.95) );
+            position: relative;
+            overflow: hidden;
+        }
+
+            .hero::after {
+                content: ">_";
+                position: absolute;
+                left: 35px;
+                bottom: 10px;
+                font-family: "JetBrains Mono";
+                font-size: 100px;
+                color: rgba(60,255,122,.035);
+            }
+
+        .badge {
+            display: inline-flex;
+            gap: 8px;
+            align-items: center;
+            padding: 8px 15px;
+            border: 1px solid rgba(60,255,122,.35);
+            color: var(--green);
+            border-radius: 999px;
+            background: rgba(60,255,122,.06);
+            font-size: 13px;
+        }
+
+        .hero h1 {
+            font-size: clamp(35px,6vw,70px);
+            margin: 20px 0 5px;
+            line-height: 1.1;
+        }
+
+            .hero h1 span {
+                color: var(--green);
+                font-family: "JetBrains Mono";
+            }
+
+        .hero p {
+            max-width: 850px;
+            color: var(--muted);
+            font-size: 17px;
+            line-height: 2;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            border: none;
+            cursor: pointer;
+            font-family: "Cairo";
+            font-weight: 700;
+        }
+
+        .primary {
+            background: var(--green);
+            color: #031008;
+            padding: 13px 25px;
+            border-radius: 12px;
+            transition: .2s;
+        }
+
+            .primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 0 25px rgba(60,255,122,.25);
+            }
+
+        .secondary {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 13px 25px;
+            border-radius: 12px;
+        }
+
+        /* ================= USER ================= */
+
+        .user-panel {
+            margin-top: 20px;
+            padding: 20px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+            .user-panel input {
+                background: #071117;
+                color: white;
+                border: 1px solid var(--border);
+                padding: 12px 15px;
+                border-radius: 10px;
+                outline: none;
+                font-family: Cairo;
+                min-width: 230px;
+            }
+
+                .user-panel input:focus {
+                    border-color: var(--green);
+                }
+
+        /* ================= PROGRESS ================= */
+
+        .progress-section {
+            margin-top: 25px;
+            padding: 22px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: var(--panel);
+        }
+
+        .progress-top {
+            display: flex;
+            justify-content: space-between;
+            color: var(--muted);
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #172932;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient( 90deg, var(--green2), var(--green) );
+            transition: .5s;
+        }
+
+        /* ================= ROOMS ================= */
+
+        .section-title {
+            margin: 55px 0 20px;
+            font-size: 28px;
+        }
+
+        .rooms {
+            display: grid;
+            gap: 16px;
+        }
+
+        .room {
+            border: 1px solid var(--border);
+            background: var(--panel);
+            border-radius: 20px;
+            padding: 25px;
+            transition: .2s;
+        }
+
+            .room:hover {
+                border-color: #2a515c;
+                transform: translateY(-2px);
+            }
+
+        .room-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .room-number {
+            color: var(--green);
+            font-family: "JetBrains Mono";
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .room h2 {
+            margin: 7px 0;
+            font-size: 23px;
+        }
+
+        .room-description {
+            color: var(--muted);
+            margin: 0;
+            line-height: 1.9;
+        }
+
+        .difficulty {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .easy {
+            color: var(--green);
+            background: rgba(60,255,122,.08);
+            border: 1px solid rgba(60,255,122,.2);
+        }
+
+        .medium {
+            color: var(--yellow);
+            background: rgba(255,200,87,.08);
+            border: 1px solid rgba(255,200,87,.2);
+        }
+
+        .room-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: 18px;
+        }
+
+        .tag {
+            color: #8fa7ae;
+            border: 1px solid #203940;
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+        }
+
+        .room-footer {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .points {
+            color: var(--yellow);
+            font-family: "JetBrains Mono";
+            font-size: 13px;
+        }
+
+        /* ================= LAB ================= */
+
+        .lab {
+            display: none;
+            margin-top: 40px;
+        }
+
+            .lab.active {
+                display: block;
+            }
+
+        .back {
+            color: var(--muted);
+            background: none;
+            border: 1px solid var(--border);
+            padding: 10px 18px;
+            border-radius: 10px;
+        }
+
+        .lab-header {
+            margin-top: 20px;
+            border: 1px solid var(--border);
+            background: var(--panel);
+            padding: 30px;
+            border-radius: 22px;
+        }
+
+            .lab-header h1 {
+                margin: 0 0 8px;
+            }
+
+            .lab-header p {
+                color: var(--muted);
+                line-height: 2;
+            }
+
+        /* ================= TASK ================= */
+
+        .task {
+            margin-top: 18px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 25px;
+        }
+
+            .task.completed {
+                border-color: rgba(60,255,122,.45);
+                box-shadow: 0 0 20px rgba(60,255,122,.04);
+            }
+
+        .task-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .task-number {
+            color: var(--green);
+            font-family: "JetBrains Mono";
+        }
+
+        .task-points {
+            color: var(--yellow);
+            font-family: "JetBrains Mono";
+            font-size: 12px;
+        }
+
+        .task h3 {
+            font-size: 20px;
+            margin: 15px 0;
+        }
+
+        /* ================= THEORY ================= */
+
+        .theory {
+            background: #09151b;
+            border-right: 4px solid var(--green);
+            padding: 18px;
+            border-radius: 10px;
+            margin: 15px 0;
+            line-height: 2;
+        }
+
+        .theory-title {
+            color: var(--green);
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .theory code {
+            background: #02090c;
+            color: #7dffad;
+            padding: 3px 7px;
+            border-radius: 5px;
+            font-family: "JetBrains Mono";
+        }
+
+        /* ================= TERMINAL ================= */
+
+        .terminal {
+            background: #020608;
+            border: 1px solid #1b3035;
+            border-radius: 13px;
+            overflow: hidden;
+            margin-top: 15px;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .terminal-bar {
+            background: #0d171b;
+            padding: 10px 14px;
+            display: flex;
+            gap: 7px;
+            align-items: center;
+        }
+
+        .terminal-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #33454b;
+        }
+
+        .terminal-title {
+            color: #688087;
+            font-size: 11px;
+            margin-left: 8px;
+            font-family: "JetBrains Mono";
+        }
+
+        .terminal-body {
+            padding: 16px;
+            min-height: 100px;
+            font-family: "JetBrains Mono";
+            font-size: 13px;
+            color: #b9d4da;
+            white-space: pre-wrap;
+            line-height: 1.8;
+        }
+
+        .prompt {
+            color: var(--green);
+        }
+
+        .command {
+            color: white;
+        }
+
+        .command-box {
+            display: flex;
+            background: #071014;
+            border-top: 1px solid #182c32;
+        }
+
+            .command-box span {
+                padding: 14px;
+                color: var(--green);
+                font-family: "JetBrains Mono";
+            }
+
+            .command-box input {
+                flex: 1;
+                background: transparent;
+                border: none;
+                outline: none;
+                color: white;
+                font-family: "JetBrains Mono";
+                padding: 14px 0;
+            }
+
+        /* ================= QUESTION ================= */
+
+        .question {
+            margin-top: 20px;
+            color: #dcebed;
+            line-height: 1.9;
+        }
+
+        .answer-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+            .answer-row input {
+                flex: 1;
+                background: #071117;
+                color: white;
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                padding: 13px;
+                font-family: "JetBrains Mono";
+                direction: ltr;
+                text-align: left;
+                outline: none;
+            }
+
+                .answer-row input:focus {
+                    border-color: var(--green);
+                }
+
+        .hint {
+            margin-top: 12px;
+            background: rgba(255,200,87,.05);
+            border: 1px solid rgba(255,200,87,.15);
+            color: #cbbd95;
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 12px;
+        }
+
+        .feedback {
+            margin-top: 12px;
+            font-size: 13px;
+            min-height: 22px;
+        }
+
+        .correct {
+            color: var(--green);
+        }
+
+        .wrong {
+            color: var(--red);
+        }
+
+        /* ================= SCORE ================= */
+
+        .score-card {
+            margin-top: 25px;
+            padding: 25px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--panel);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .score-number {
+            color: var(--green);
+            font-family: "JetBrains Mono";
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            margin-top: 80px;
+            padding: 30px 0;
+            border-top: 1px solid var(--border);
+            color: #536970;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        @media(max-width:700px) {
+
+            .hero {
+                padding: 30px 20px;
+            }
+
+            .room-top {
+                flex-direction: column;
+            }
+
+            .answer-row {
+                flex-direction: column;
+            }
+
+            .hero h1 {
+                font-size: 38px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+
+        <div class="container nav">
+
+            <div class="logo">
+
+                CYBER<span>BATH</span> >
+
+            </div>
+
+            <div class="status">
+
+                <span class="dot"></span>
+
+                SECURE TRAINING ENVIRONMENT
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <main class="container">
+
+        <!-- ================= HERO ================= -->
+
+        <section class="hero">
+
+            <div class="badge">
+
+                ● مركز العمليات الأمنية — Beginner Lab
+
+            </div>
+
+            <h1>
+
+                مختبر <span>SOC</span>
+
+            </h1>
+
+            <p>
+
+                رحلة قصيرة وعملية تبدأ معك من أبسط أوامر Linux،
+
+                ثم تنتقل إلى قراءة الملفات والـ Logs،
+
+                وفي النهاية تبدأ تفكر مثل محلل SOC.
+
+                كل البيانات داخل المختبر وهمية وثابتة لجميع المتدربين.
+
+            </p>
+
+            <div class="hero-buttons">
+
+                <button class="primary" onclick="startFirstRoom()">
+
+                    ابدأ التدريب الأول
+
+                </button>
+
+                <button class="secondary" onclick="scrollToRooms()">
+
+                    تصفح الغرف
+
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= USER ================= -->
+
+        <section class="user-panel">
+
+            <strong>👤 اسم المتدرب:</strong>
+
+            <input id="username"
+                   placeholder="اكتب اسمك هنا"
+                   maxlength="30">
+
+            <button class="primary" onclick="saveUser()">
+
+                حفظ
+
+            </button>
+
+            <span id="userMessage"></span>
+
+        </section>
+
+
+        <!-- ================= PROGRESS ================= -->
+
+        <section class="progress-section">
+
+            <div class="progress-top">
+
+                <span>تقدمك في المختبر</span>
+
+                <span id="progressText">0 / 16 مهمة</span>
+
+            </div>
+
+            <div class="progress-bar">
+
+                <div class="progress-fill" id="progressFill"></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= ROOMS ================= -->
+
+        <section id="roomsSection">
+
+            <h2 class="section-title">الغرف التدريبية</h2>
+
+            <div class="rooms">
+
+
+                <!-- ROOM 1 -->
+
+                <div class="room">
+
+                    <div class="room-top">
+
+                        <div>
+
+                            <div class="room-number">الغرفة 01 — LINUX ZERO</div>
+
+                            <h2>أول خطوة داخل Ubuntu</h2>
+
+                            <p class="room-description">
+
+                                نتعرف على المستخدم، مكاننا الحالي، والملفات الأساسية.
+
+                            </p>
+
+                        </div>
+
+                        <span class="difficulty easy">مبتدئ</span>
+
+                    </div>
+
+                    <div class="room-tags">
+
+                        <span class="tag">whoami</span>
+
+                        <span class="tag">pwd</span>
+
+                        <span class="tag">ls</span>
+
+                        <span class="tag">cd</span>
+
+                    </div>
+
+                    <div class="room-footer">
+
+                        <span class="points">40 نقطة</span>
+
+                        <button class="primary" onclick="openRoom(0)">
+
+                            دخول الغرفة
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ROOM 2 -->
+
+                <div class="room">
+
+                    <div class="room-top">
+
+                        <div>
+
+                            <div class="room-number">الغرفة 02 — FILES</div>
+
+                            <h2>الملفات والأدلة</h2>
+
+                            <p class="room-description">
+
+                                إنشاء ملف، كتابة بيانات داخله، ثم البحث وقراءة المحتوى.
+
+                            </p>
+
+                        </div>
+
+                        <span class="difficulty easy">مبتدئ</span>
+
+                    </div>
+
+                    <div class="room-tags">
+
+                        <span class="tag">touch</span>
+
+                        <span class="tag">cat</span>
+
+                        <span class="tag">grep</span>
+
+                        <span class="tag">echo</span>
+
+                    </div>
+
+                    <div class="room-footer">
+
+                        <span class="points">50 نقطة</span>
+
+                        <button class="primary" onclick="openRoom(1)">
+
+                            دخول الغرفة
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ROOM 3 -->
+
+                <div class="room">
+
+                    <div class="room-top">
+
+                        <div>
+
+                            <div class="room-number">الغرفة 03 — LOGS</div>
+
+                            <h2>اقرأ الـ Log</h2>
+
+                            <p class="room-description">
+
+                                أول تجربة حقيقية مع السجلات: IP، المستخدم، الوقت، والنتيجة.
+
+                            </p>
+
+                        </div>
+
+                        <span class="difficulty easy">مبتدئ</span>
+
+                    </div>
+
+                    <div class="room-tags">
+
+                        <span class="tag">auth.log</span>
+
+                        <span class="tag">cat</span>
+
+                        <span class="tag">grep</span>
+
+                        <span class="tag">tail</span>
+
+                    </div>
+
+                    <div class="room-footer">
+
+                        <span class="points">65 نقطة</span>
+
+                        <button class="primary" onclick="openRoom(2)">
+
+                            دخول الغرفة
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ROOM 4 -->
+
+                <div class="room">
+
+                    <div class="room-top">
+
+                        <div>
+
+                            <div class="room-number">الغرفة 04 — SOC</div>
+
+                            <h2>أنت الآن محلل SOC</h2>
+
+                            <p class="room-description">
+
+                                استخدم الـ Logs لاكتشاف محاولات الدخول الفاشلة وتحديد الـ IP المشبوه.
+
+                            </p>
+
+                        </div>
+
+                        <span class="difficulty medium">متوسط</span>
+
+                    </div>
+
+                    <div class="room-tags">
+
+                        <span class="tag">grep</span>
+
+                        <span class="tag">IP</span>
+
+                        <span class="tag">Failed Login</span>
+
+                        <span class="tag">Analysis</span>
+
+                    </div>
+
+                    <div class="room-footer">
+
+                        <span class="points">85 نقطة</span>
+
+                        <button class="primary" onclick="openRoom(3)">
+
+                            دخول الغرفة
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= LAB ================= -->
+
+        <section class="lab" id="lab">
+
+            <button class="back" onclick="closeLab()">
+
+                ← العودة للغرف
+
+            </button>
+
+            <div class="lab-header">
+
+                <div class="badge">
+
+                    ● TRAINING ENVIRONMENT
+
+                </div>
+
+                <h1 id="labTitle"></h1>
+
+                <p id="labDescription"></p>
+
+            </div>
+
+            <div id="tasks"></div>
+
+            <div class="score-card">
+
+                <div>
+
+                    نقاطك الحالية
+
+                </div>
+
+                <div class="score-number" id="score">
+
+                    0
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <footer>
+
+            CYBER BATH > SOC Training Lab
+
+            <br>
+
+            جميع البيانات داخل المختبر وهمية ومخصصة للتدريب فقط.
+
+        </footer>
+
+    </main>
+
+
+    <script>
+
+/* ============================================================
+   DATA
+============================================================ */
+
+const rooms = [
+
+{
+
+title:"الغرفة 01 — أول خطوة داخل Ubuntu",
+
+description:"قبل أن نحلل أي Log، لازم نعرف الأساسيات داخل Linux.",
+
+tasks:[
+
+{
+
+title:"من أنت؟",
+
+points:8,
+
+theory:`
+
+الأمر <code>whoami</code> بسيط جدًا.
+
+هو يخبرك باسم المستخدم الذي تعمل به حاليًا.
+
+في SOC ستتعامل كثيرًا مع معلومات المستخدمين،
+
+لذلك نبدأ بهذا الأمر.
+
+<br><br>
+
+🖥️ نفّذ:
+
+<code>whoami</code>
+
+`,
+
+command:"whoami",
+
+output:"analyst",
+
+question:"ما اسم المستخدم الظاهر في الـ Terminal؟",
+
+answers:["analyst"]
+
+},
+
+{
+
+title:"أين أنا؟",
+
+points:8,
+
+theory:`
+
+الأمر <code>pwd</code> يعني Print Working Directory.
+
+يخبرك بالمجلد الذي أنت موجود بداخله الآن.
+
+تخيليه مثل سؤال:
+
+«أنا وين داخل النظام؟»
+
+<br><br>
+
+🖥️ نفّذ:
+
+<code>pwd</code>
+
+`,
+
+command:"pwd",
+
+output:"/home/analyst",
+
+question:"ما هو المسار الحالي؟",
+
+answers:["/home/analyst"]
+
+},
+
+{
+
+title:"شوف الملفات",
+
+points:10,
+
+theory:`
+
+الأمر <code>ls</code> يعرض الملفات والمجلدات الموجودة
+
+في المكان الحالي.
+
+قبل أن تتعامل مع أي ملف، من المفيد أن تعرف ماذا يوجد أمامك.
+
+<br><br>
+
+🖥️ نفّذ:
+
+<code>ls</code>
+
+`,
+
+command:"ls",
+
+output:"Documents  Downloads  logs  notes.txt",
+
+question:"ما اسم مجلد السجلات الموجود هنا؟",
+
+answers:["logs"]
+
+},
+
+{
+
+title:"ادخل مجلد الـ Logs",
+
+points:14,
+
+theory:`
+
+الأمر <code>cd</code> يستخدم للتنقل بين المجلدات.
+
+مثلاً:
+
+<code>cd logs</code>
+
+يعني ادخل إلى مجلد اسمه logs.
+
+وهذا مهم جدًا لأن محلل SOC يحتاج للوصول إلى أماكن تخزين السجلات.
+
+`,
+
+command:"cd logs",
+
+output:"analyst@ubuntu:~/logs$",
+
+question:"ما الأمر الذي استخدمناه للدخول إلى مجلد logs؟",
+
+answers:["cd logs","cd"]
+
+}
+
+]
+
+},
+
+{
+
+title:"الغرفة 02 — الملفات والأدلة",
+
+description:"الآن سنتعامل مع ملفات بسيطة تشبه فكرة جمع الأدلة.",
+
+tasks:[
+
+{
+
+title:"أنشئ ملفًا",
+
+points:10,
+
+theory:`
+
+الأمر <code>touch</code> يستطيع إنشاء ملف فارغ.
+
+في التحقيقات قد تتعامل مع ملفات كثيرة،
+
+ولذلك نحتاج معرفة أساسيات التعامل معها.
+
+<br><br>
+
+🖥️ جرّب:
+
+<code>touch evidence.txt</code>
+
+`,
+
+command:"touch evidence.txt",
+
+output:"File created: evidence.txt",
+
+question:"ما الأمر المستخدم لإنشاء ملف جديد؟",
+
+answers:["touch","touch evidence.txt"]
+
+},
+
+{
+
+title:"اقرأ الملف",
+
+points:10,
+
+theory:`
+
+الأمر <code>cat</code> يعرض محتوى الملف مباشرة.
+
+إذا كان لدينا ملف يحتوي على معلومات مهمة،
+
+فهذا من أبسط الأوامر لقراءته.
+
+<br><br>
+
+🖥️ جرّب:
+
+<code>cat evidence.txt</code>
+
+`,
+
+command:"cat evidence.txt",
+
+output:"User=analyst\nStatus=active\nIP=192.168.10.25",
+
+question:"ما الـ IP الموجود داخل الملف؟",
+
+answers:["192.168.10.25"]
+
+},
+
+{
+
+title:"اكتب معلومة",
+
+points:12,
+
+theory:`
+
+الأمر <code>echo</code> يستطيع طباعة نص.
+
+ويمكن استخدامه أيضًا مع <code>></code>
+
+لكتابة النص داخل ملف.
+
+مثال:
+
+<code>echo "test" > note.txt</code>
+
+<br><br>
+
+هذا مجرد تدريب على التعامل مع الملفات.
+
+`,
+
+command:'echo "SOC_START" > note.txt',
+
+output:"note.txt updated",
+
+question:"ما الكلمة التي كتبناها داخل الملف؟",
+
+answers:["soc_start","SOC_START"]
+
+},
+
+{
+
+title:"ابحث عن كلمة",
+
+points:18,
+
+theory:`
+
+الأمر <code>grep</code> مهم جدًا في تحليل الـ Logs.
+
+بدل أن تقرأ آلاف الأسطر،
+
+تستطيع البحث عن كلمة معينة.
+
+مثلاً:
+
+<code>grep "Failed" auth.log</code>
+
+يعرض الأسطر التي تحتوي على Failed.
+
+`,
+
+command:'grep "Failed" auth.log',
+
+output:"2026-09-17 18:42:11 Failed password for analyst from 192.168.10.50",
+
+question:"ما الكلمة التي نبحث عنها في المثال؟",
+
+answers:["failed"]
+
+}
+
+]
+
+},
+
+{
+
+title:"الغرفة 03 — اقرأ الـ Log",
+
+description:"هنا نبدأ الجزء الذي يهم محلل SOC: قراءة السجلات.",
+
+tasks:[
+
+{
+
+title:"ما هو الـ Log؟",
+
+points:10,
+
+theory:`
+
+الـ Log هو سجل للأحداث التي حدثت داخل النظام.
+
+قد يحتوي على:
+
+الوقت — المستخدم — الـ IP — نوع الحدث — النتيجة.
+
+كمحلل SOC، ستقرأ هذه المعلومات لتفهم ماذا حدث.
+
+<br><br>
+
+🖥️ الملف التدريبي:
+
+<code>/var/log/auth.log</code>
+
+`,
+
+command:"cat /var/log/auth.log",
+
+output:"2026-09-17 18:40:02 Accepted password for analyst from 192.168.10.25\n2026-09-17 18:41:33 Failed password for admin from 192.168.10.50\n2026-09-17 18:42:11 Failed password for admin from 192.168.10.50",
+
+question:"ما اسم الملف الذي نحلله؟",
+
+answers:["auth.log","/var/log/auth.log"]
+
+},
+
+{
+
+title:"حدد محاولة الدخول الفاشلة",
+
+points:15,
+
+theory:`
+
+لاحظي أن كلمة <code>Failed</code>
+
+تعني أن محاولة الدخول لم تنجح.
+
+بدل قراءة كل السجل،
+
+يمكن استخدام:
+
+<code>grep "Failed" /var/log/auth.log</code>
+
+لإظهار المحاولات الفاشلة فقط.
+
+`,
+
+command:'grep "Failed" /var/log/auth.log',
+
+output:"18:41:33 Failed password for admin from 192.168.10.50\n18:42:11 Failed password for admin from 192.168.10.50",
+
+question:"كم محاولة دخول فاشلة ظهرت؟",
+
+answers:["2","two"]
+
+},
+
+{
+
+title:"ما هو عنوان الـ IP؟",
+
+points:18,
+
+theory:`
+
+في الـ Log قد يظهر عنوان IP للمصدر.
+
+في هذا المختبر نستخدم IP ثابت وهمي:
+
+<code>192.168.10.50</code>
+
+حتى لا نستخدم أي بيانات حقيقية من أجهزة المتدربين.
+
+`,
+
+command:'grep "Failed" /var/log/auth.log',
+
+output:"Failed password for admin from 192.168.10.50\nFailed password for admin from 192.168.10.50",
+
+question:"ما عنوان الـ IP المرتبط بالمحاولات الفاشلة؟",
+
+answers:["192.168.10.50"]
+
+},
+
+{
+
+title:"آخر الأحداث",
+
+points:22,
+
+theory:`
+
+الأمر <code>tail</code> يعرض آخر أسطر من الملف.
+
+وهذا مفيد جدًا عندما يكون الـ Log كبيرًا
+
+ونريد مشاهدة أحدث الأحداث بسرعة.
+
+<br><br>
+
+🖥️ جرّبي:
+
+<code>tail -n 3 /var/log/auth.log</code>
+
+`,
+
+command:"tail -n 3 /var/log/auth.log",
+
+output:"18:40 Accepted password analyst\n18:41 Failed password admin 192.168.10.50\n18:42 Failed password admin 192.168.10.50",
+
+question:"أي أمر يعرض آخر 3 أسطر؟",
+
+answers:["tail -n 3 /var/log/auth.log","tail -n 3"]
+
+}
+
+]
+
+},
+
+{
+
+title:"الغرفة 04 — أنت الآن محلل SOC",
+
+description:"استخدم كل ما تعلمته لتحليل Incident صغير.",
+
+tasks:[
+
+{
+
+title:"ابحث عن كل Failed",
+
+points:15,
+
+theory:`
+
+الآن أنت تعرف أن <code>grep</code>
+
+يساعدنا في فلترة الـ Logs.
+
+لدينا Log يحتوي على أحداث كثيرة.
+
+مهمتك هي البحث عن جميع الأحداث التي تحتوي على:
+
+<code>Failed</code>
+
+`,
+
+command:'grep "Failed" security.log',
+
+output:"18:41 Failed login user=admin src=192.168.10.50\n18:42 Failed login user=admin src=192.168.10.50\n18:43 Failed login user=admin src=192.168.10.50",
+
+question:"كم Failed Login وجدنا؟",
+
+answers:["3","three"]
+
+},
+
+{
+
+title:"حدد الـ Source IP",
+
+points:20,
+
+theory:`
+
+في التحقيق الأمني نحتاج معرفة مصدر الحدث.
+
+في السطر:
+
+<code>src=192.168.10.50</code>
+
+كلمة <code>src</code> تعني Source.
+
+أي عنوان الـ IP الذي جاء منه الحدث.
+
+`,
+
+command:'grep "Failed" security.log',
+
+output:"18:41 Failed login user=admin src=192.168.10.50\n18:42 Failed login user=admin src=192.168.10.50\n18:43 Failed login user=admin src=192.168.10.50",
+
+question:"ما هو Source IP؟",
+
+answers:["192.168.10.50"]
+
+},
+
+{
+
+title:"من هو المستخدم المستهدف؟",
+
+points:20,
+
+theory:`
+
+لاحظي الجزء:
+
+<code>user=admin</code>
+
+هذا يخبرنا بالحساب الذي استهدفته محاولات الدخول.
+
+كمحلل SOC، نربط بين:
+
+User + Source IP + Time + Event
+
+حتى نفهم ما يحدث.
+
+`,
+
+command:'grep "Failed" security.log',
+
+output:"18:41 Failed login user=admin src=192.168.10.50\n18:42 Failed login user=admin src=192.168.10.50\n18:43 Failed login user=admin src=192.168.10.50",
+
+question:"ما اسم المستخدم المستهدف؟",
+
+answers:["admin"]
+
+},
+
+{
+
+title:"التحليل النهائي ⚡",
+
+points:30,
+
+theory:`
+
+ممتاز.
+
+الآن لديك:
+
+• 3 محاولات دخول فاشلة
+
+• المستخدم المستهدف: admin
+
+• المصدر: 192.168.10.50
+
+• المحاولات حدثت خلال فترة قصيرة.
+
+في SOC، لا نحتاج فقط أن نقرأ الـ Log،
+
+بل نربط المعلومات مع بعضها ونصف ما حدث.
+
+<br><br>
+
+🎯 السؤال الأخير:
+
+ما هو الـ IP الذي يجب أن نضعه في Incident Report كمصدر للمحاولات الفاشلة؟
+
+`,
+
+command:"grep \"Failed\" security.log",
+
+output:"FAILED LOGIN DETECTED\nuser=admin\nsrc=192.168.10.50\nattempts=3",
+
+question:"اكتب Source IP في الـ Incident Report.",
+
+answers:["192.168.10.50"]
+
+}
+
+]
+
+}
+
+];
+
+
+/* ============================================================
+   STATE
+============================================================ */
+
+let currentRoom = 0;
+
+let score = 0;
+
+let completedTasks = new Set();
+
+let userName = "";
+
+
+/* ============================================================
+   USER
+============================================================ */
+
+function saveUser(){
+
+    const input = document.getElementById("username");
+
+    const name = input.value.trim();
+
+    if(!name){
+
+        document.getElementById("userMessage").innerHTML =
+
+        '<span style="color:#ff5570">اكتب اسمك أولاً.</span>';
+
+        return;
+    }
+
+    userName = name;
+
+    localStorage.setItem("cyberBathUser",name);
+
+    document.getElementById("userMessage").innerHTML =
+
+    '<span style="color:#3cff7a">✓ تم حفظ الاسم</span>';
+
+    saveProgress();
+}
+
+
+function loadUser(){
+
+    const saved = localStorage.getItem("cyberBathUser");
+
+    if(saved){
+
+        userName = saved;
+
+        document.getElementById("username").value = saved;
+    }
+}
+
+
+/* ============================================================
+   ROOM
+============================================================ */
+
+function openRoom(index){
+
+    currentRoom = index;
+
+    document.getElementById("roomsSection").style.display="none";
+
+    document.querySelector(".hero").style.display="none";
+
+    document.querySelector(".user-panel").style.display="none";
+
+    document.querySelector(".progress-section").style.display="none";
+
+    document.getElementById("lab").classList.add("active");
+
+    renderRoom();
+
+    window.scrollTo({
+
+        top:0,
+
+        behavior:"smooth"
+    });
+}
+
+
+function closeLab(){
+
+    document.getElementById("lab").classList.remove("active");
+
+    document.getElementById("roomsSection").style.display="block";
+
+    document.querySelector(".hero").style.display="block";
+
+    document.querySelector(".user-panel").style.display="flex";
+
+    document.querySelector(".progress-section").style.display="block";
+
+    updateProgress();
+
+    window.scrollTo({
+
+        top:0,
+
+        behavior:"smooth"
+    });
+}
+
+
+function renderRoom(){
+
+    const room = rooms[currentRoom];
+
+    document.getElementById("labTitle").textContent = room.title;
+
+    document.getElementById("labDescription").textContent = room.description;
+
+    const tasksContainer = document.getElementById("tasks");
+
+    tasksContainer.innerHTML="";
+
+    room.tasks.forEach((task,index)=>{
+
+        const taskId = currentRoom+"-"+index;
+
+        const isDone = completedTasks.has(taskId);
+
+        const div = document.createElement("div");
+
+        div.className = "task " + (isDone ? "completed" : "");
+
+        div.innerHTML = `
+
+        <div class="task-head">
+
+            <span class="task-number">
+
+                TASK ${String(index+1).padStart(2,"0")}
+
+            </span>
+
+            <span class="task-points">
+
+                +${task.points} XP
+
+            </span>
+
+        </div>
+
+        <h3>${task.title}</h3>
+
+        <div class="theory">
+
+            <div class="theory-title">
+
+                💡 قبل ما تبدأ
+
+            </div>
+
+            ${task.theory}
+
+        </div>
+
+        <div class="terminal">
+
+            <div class="terminal-bar">
+
+                <span class="terminal-dot"></span>
+
+                <span class="terminal-dot"></span>
+
+                <span class="terminal-dot"></span>
+
+                <span class="terminal-title">
+
+                    ubuntu@cyberlab:~$
+
+                </span>
+
+            </div>
+
+            <div class="terminal-body">
+
+                <span class="prompt">analyst@ubuntu:~$ </span>
+
+                <span class="command">${escapeHTML(task.command)}</span>
+
+                <br>
+
+                ${escapeHTML(task.output)}
+
+            </div>
+
+            <div class="command-box">
+
+                <span>$</span>
+
+                <input
+
+                    id="cmd-${taskId}"
+
+                    placeholder="اكتب الأمر هنا..."
+
+                    autocomplete="off"
+
+                    onkeydown="handleCommand(event, '${taskId}', ${index})"
+
+                >
+
+            </div>
+
+        </div>
+
+        <div class="question">
+
+            ❓ ${task.question}
+
+        </div>
+
+        <div class="answer-row">
+
+            <input
+
+                id="answer-${taskId}"
+
+                placeholder="اكتب إجابتك هنا..."
+
+                ${isDone ? "disabled" : ""}
+
+            >
+
+            <button
+
+                class="primary"
+
+                onclick="checkAnswer(${index})"
+
+                ${isDone ? "disabled" : ""}
+
+            >
+
+                تحقق
+
+            </button>
+
+        </div>
+
+        <div class="hint">
+
+            💡 تلميح: اقرأ الـشرح فوق ثم جرّب الأمر المعروض في الـTerminal.
+
+        </div>
+
+        <div class="feedback" id="feedback-${taskId}">
+
+            ${isDone ? '<span class="correct">✓ Task مكتملة</span>' : ""}
+
+        </div>
+
+        `;
+
+        tasksContainer.appendChild(div);
+
+    });
+
+    updateScore();
+}
+
+
+/* ============================================================
+   TERMINAL
+============================================================ */
+
+function handleCommand(event,taskId,index){
+
+    if(event.key !== "Enter") return;
+
+    const input = document.getElementById("cmd-"+taskId);
+
+    const value = input.value.trim();
+
+    const task = rooms[currentRoom].tasks[index];
+
+    const terminal = input.closest(".terminal");
+
+    const body = terminal.querySelector(".terminal-body");
+
+    body.innerHTML += `
+
+    <br>
+
+    <span class="prompt">analyst@ubuntu:~$ </span>
+
+    <span class="command">${escapeHTML(value)}</span>
+
+    <br>
+
+    <span>${escapeHTML(getCommandResponse(value,task))}</span>
+
+    `;
+
+    input.value="";
+
+}
+
+
+function getCommandResponse(command,task){
+
+    const clean = command.trim().toLowerCase();
+
+    if(clean === task.command.toLowerCase()){
+
+        return task.output;
+    }
+
+    if(clean === "clear"){
+
+        return "Terminal cleared.";
+    }
+
+    if(clean === "help"){
+
+        return "Try the command shown in the task explanation.";
+    }
+
+    return "Command executed in training simulator. Try the command mentioned in the explanation.";
+}
+
+
+/* ============================================================
+   ANSWERS
+============================================================ */
+
+function checkAnswer(index){
+
+    const task = rooms[currentRoom].tasks[index];
+
+    const taskId = currentRoom+"-"+index;
+
+    if(completedTasks.has(taskId)) return;
+
+    const input = document.getElementById("answer-"+taskId);
+
+    const feedback = document.getElementById("feedback-"+taskId);
+
+    const answer = input.value.trim().toLowerCase();
+
+    const correct = task.answers.some(
+
+        x => x.toLowerCase() === answer
+
+    );
+
+    if(correct){
+
+        completedTasks.add(taskId);
+
+        score += task.points;
+
+        feedback.innerHTML =
+
+        `<span class="correct">
+
+            ✓ إجابة صحيحة! +${task.points} XP
+
+        </span>`;
+
+        input.disabled=true;
+
+        input.parentElement.querySelector("button").disabled=true;
+
+        input.parentElement.querySelector("button").style.opacity=".4";
+
+        const taskElement = input.closest(".task");
+
+        taskElement.classList.add("completed");
+
+        updateScore();
+
+        updateProgress();
+
+        saveProgress();
+
+        if(completedTasks.size === 16){
+
+            setTimeout(()=>{
+
+                alert(
+
+                "🎉 مبروك! أكملت مختبر SOC بالكامل!\\n\\n"+
+
+                "مجموع نقاطك: "+score+" XP"
+
+                );
+
+            },300);
+
+        }
+
+    }else{
+
+        feedback.innerHTML =
+
+        `<span class="wrong">
+
+            ✗ ليست الإجابة المطلوبة — ارجع للشرح وجرب مرة ثانية.
+
+        </span>`;
+
+    }
+}
+
+
+/* ============================================================
+   SCORE
+============================================================ */
+
+function updateScore(){
+
+    document.getElementById("score").textContent = score+" XP";
+}
+
+
+function updateProgress(){
+
+    const total = 16;
+
+    const done = completedTasks.size;
+
+    const percent = (done/total)*100;
+
+    document.getElementById("progressText").textContent =
+
+    `${done} / ${total} مهمة`;
+
+    document.getElementById("progressFill").style.width = percent+"%";
+}
+
+
+/* ============================================================
+   FIREBASE SAVE
+============================================================ */
+
+async function saveProgress(){
+
+    if(!userName) return;
+
+    const data = {
+
+        name:userName,
+
+        score:score,
+
+        completedTasks:Array.from(completedTasks),
+
+        updatedAt:new Date().toISOString()
+    };
+
+    localStorage.setItem(
+
+        "cyberBathProgress",
+
+        JSON.stringify(data)
+
+    );
+
+    if(!window.firebaseReady) return;
+
+    try{
+
+        await setDoc(
+
+            doc(window.db,"students",userName),
+
+            data,
+
+            {merge:true}
+
+        );
+
+        console.log("Progress saved to Firebase.");
+
+    }catch(error){
+
+        console.log("Firebase save error:",error);
+    }
+}
+
+
+async function loadProgress(){
+
+    const local = localStorage.getItem("cyberBathProgress");
+
+    if(local){
+
+        try{
+
+            const data = JSON.parse(local);
+
+            if(data.name === userName){
+
+                score = data.score || 0;
+
+                completedTasks = new Set(
+
+                    data.completedTasks || []
+
+                );
+            }
+
+        }catch(e){}
+    }
+
+    if(!window.firebaseReady || !userName) return;
+
+    try{
+
+        const snap = await getDoc(
+
+            doc(window.db,"students",userName)
+
+        );
+
+        if(snap.exists()){
+
+            const data = snap.data();
+
+            score = data.score || score;
+
+            completedTasks = new Set(
+
+                data.completedTasks || Array.from(completedTasks)
+
+            );
+
+            localStorage.setItem(
+
+                "cyberBathProgress",
+
+                JSON.stringify({
+
+                    name:userName,
+
+                    score:score,
+
+                    completedTasks:Array.from(completedTasks)
+
+                })
+
+            );
+
+            updateProgress();
+
+            updateScore();
+        }
+
+    }catch(error){
+
+        console.log("Firebase load error:",error);
+    }
+}
+
+
+/* ============================================================
+   HELPERS
+============================================================ */
+
+function escapeHTML(text){
+
+    return text
+
+        .replaceAll("&","&amp;")
+
+        .replaceAll("<","&lt;")
+
+        .replaceAll(">","&gt;")
+
+        .replaceAll('"',"&quot;")
+
+        .replaceAll("'","&#039;");
+}
+
+
+function startFirstRoom(){
+
+    if(!userName){
+
+        document.getElementById("username").focus();
+
+        document.getElementById("userMessage").innerHTML =
+
+        '<span style="color:#ffc857">اكتب اسمك أولاً ثم ابدأ.</span>';
+
+        return;
+    }
+
+    openRoom(0);
+}
+
+
+function scrollToRooms(){
+
+    document.getElementById("roomsSection").scrollIntoView({
+
+        behavior:"smooth"
+    });
+}
+
+
+/* ============================================================
+   INIT
+============================================================ */
+
+window.addEventListener("load",async()=>{
+
+    loadUser();
+
+    updateProgress();
+
+    updateScore();
+
+    if(userName){
+
+        await loadProgress();
+    }
+
+});
+
+    </script>
+
+</body>
+</html>
