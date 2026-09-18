@@ -1333,129 +1333,129 @@
 
                 div.innerHTML = `
 
-                <div class="task-head">
+                    <div class="task-head">
 
-                    <span class="task-number">
+                        <span class="task-number">
 
-                        TASK ${String(index + 1).padStart(2, "0")}
+                            TASK ${String(index + 1).padStart(2, "0")}
 
-                    </span>
+                        </span>
 
-                    <span class="task-points">
+                        <span class="task-points">
 
-                        +${task.points} XP
-
-                    </span>
-
-                </div>
-
-                <h3>${task.title}</h3>
-
-                <div class="theory">
-
-                    <div class="theory-title">
-
-                        💡 قبل ما تبدأ
-
-                    </div>
-
-                    ${task.theory}
-
-                </div>
-
-                <div class="terminal">
-
-                    <div class="terminal-bar">
-
-                        <span class="terminal-dot"></span>
-
-                        <span class="terminal-dot"></span>
-
-                        <span class="terminal-dot"></span>
-
-                        <span class="terminal-title">
-
-                            ubuntu@cyberlab:~$
+                            +${task.points} XP
 
                         </span>
 
                     </div>
 
-                    <div class="terminal-body">
+                    <h3>${task.title}</h3>
 
-                        <span class="prompt">analyst@ubuntu:~$ </span>
+                    <div class="theory">
 
-                        <span style="color:#688087;">اكتب أي أمر Linux لتجربته...</span>
+                        <div class="theory-title">
+
+                            💡 قبل ما تبدأ
+
+                        </div>
+
+                        ${task.theory}
 
                     </div>
 
-                    <div class="command-box">
+                    <div class="terminal">
 
-                        <span>$</span>
+                        <div class="terminal-bar">
+
+                            <span class="terminal-dot"></span>
+
+                            <span class="terminal-dot"></span>
+
+                            <span class="terminal-dot"></span>
+
+                            <span class="terminal-title">
+
+                                ubuntu@cyberlab:~$
+
+                            </span>
+
+                        </div>
+
+                        <div class="terminal-body">
+
+                            <span class="prompt">analyst@ubuntu:~$ </span>
+
+                            <span style="color:#688087;">اكتب أي أمر Linux لتجربته...</span>
+
+                        </div>
+
+                        <div class="command-box">
+
+                            <span>$</span>
+
+                            <input
+
+                                id="cmd-${taskId}"
+
+                                placeholder="اكتب الأمر هنا..."
+
+                                autocomplete="off"
+
+                                onkeydown="handleCommand(event, '${taskId}', ${index})"
+
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <div class="question">
+
+                        ❓ ${task.question}
+
+                    </div>
+
+                    <div class="answer-row">
 
                         <input
 
-                            id="cmd-${taskId}"
+                            id="answer-${taskId}"
 
-                            placeholder="اكتب الأمر هنا..."
+                            placeholder="اكتب إجابتك هنا..."
 
-                            autocomplete="off"
-
-                            onkeydown="handleCommand(event, '${taskId}', ${index})"
+                            ${isDone ? "disabled" : ""}
 
                         >
 
+                        <button
+
+                            class="primary"
+
+                            onclick="checkAnswer(${index})"
+
+                            ${isDone ? "disabled" : ""}
+
+                        >
+
+                            تحقق
+
+                        </button>
+
                     </div>
 
-                </div>
+                    <div class="hint">
 
-                <div class="question">
+                        💡 تلميح: اقرأ الـشرح فوق ثم جرّب الأمر المعروض في الـTerminal.
 
-                    ❓ ${task.question}
+                    </div>
 
-                </div>
+                    <div class="feedback" id="feedback-${taskId}">
 
-                <div class="answer-row">
+                        ${isDone ? '<span class="correct">✓ Task مكتملة</span>' : ""}
 
-                    <input
+                    </div>
 
-                        id="answer-${taskId}"
-
-                        placeholder="اكتب إجابتك هنا..."
-
-                        ${isDone ? "disabled" : ""}
-
-                    >
-
-                    <button
-
-                        class="primary"
-
-                        onclick="checkAnswer(${index})"
-
-                        ${isDone ? "disabled" : ""}
-
-                    >
-
-                        تحقق
-
-                    </button>
-
-                </div>
-
-                <div class="hint">
-
-                    💡 تلميح: اقرأ الـشرح فوق ثم جرّب الأمر المعروض في الـTerminal.
-
-                </div>
-
-                <div class="feedback" id="feedback-${taskId}">
-
-                    ${isDone ? '<span class="correct">✓ Task مكتملة</span>' : ""}
-
-                </div>
-
-                `;
+                    `;
 
                 tasksContainer.appendChild(div);
 
@@ -1471,18 +1471,17 @@
 
         function handleCommand(event, taskId, index) {
 
+            // Enter داخل التيرمنال ينفذ الأمر ثم ينقلك مباشرة إلى خانة الإجابة
             if (event.key !== "Enter") return;
+            event.preventDefault();
 
             const input = document.getElementById("cmd-" + taskId);
-
             const value = input.value.trim();
 
             if (!value) return;
 
             const task = rooms[currentRoom].tasks[index];
-
             const terminal = input.closest(".terminal");
-
             const body = terminal.querySelector(".terminal-body");
 
             const response = getCommandResponse(value, task);
@@ -1494,21 +1493,20 @@
             }
 
             body.innerHTML += `
-
-            <br>
-
-            <span class="prompt">analyst@ubuntu:~$ </span>
-
-            <span class="command">${escapeHTML(value)}</span>
-
-            <br>
-
-            <span>${escapeHTML(response || "")}</span>
-
-            `;
+                    <br>
+                    <span class="prompt">analyst@ubuntu:~$ </span>
+                    <span class="command">${escapeHTML(value)}</span>
+                    <br>
+                    <span>${escapeHTML(response || "")}</span>
+                `;
 
             input.value = "";
 
+            // بعد تنفيذ الكوماند، فعّل خانة الإجابة تلقائيًا
+            const answerInput = document.getElementById("answer-" + taskId);
+            if (answerInput && !answerInput.disabled) {
+                answerInput.focus();
+            }
         }
 
 
@@ -1632,9 +1630,9 @@
 
                     `<span class="correct">
 
-                    ✓ إجابة صحيحة! +${task.points} XP
+                        ✓ إجابة صحيحة! +${task.points} XP
 
-                </span>`;
+                    </span>`;
 
                 input.disabled = true;
 
@@ -1674,9 +1672,9 @@
 
                     `<span class="wrong">
 
-                    ✗ ليست الإجابة المطلوبة — ارجع للشرح وجرب مرة ثانية.
+                        ✗ ليست الإجابة المطلوبة — ارجع للشرح وجرب مرة ثانية.
 
-                </span>`;
+                    </span>`;
 
             }
         }
@@ -1874,16 +1872,16 @@
                 const div = document.createElement("div");
                 div.className = "quiz-question";
                 div.innerHTML = `
-                    <h3>${index + 1}. ${item.q}</h3>
-                    <div class="quiz-options">
-                        ${item.options.map((option, optIndex) => `
-                            <label class="quiz-option">
-                                <input type="radio" name="quiz-${index}" value="${optIndex}">
-                                <span>${option}</span>
-                            </label>
-                        `).join("")}
-                    </div>
-                `;
+                        <h3>${index + 1}. ${item.q}</h3>
+                        <div class="quiz-options">
+                            ${item.options.map((option, optIndex) => `
+                                <label class="quiz-option">
+                                    <input type="radio" name="quiz-${index}" value="${optIndex}">
+                                    <span>${option}</span>
+                                </label>
+                            `).join("")}
+                        </div>
+                    `;
                 container.appendChild(div);
             });
         }
@@ -1948,15 +1946,15 @@
             const result = document.getElementById("quizResult");
             result.style.display = "flex";
             result.innerHTML = `
-                <div>
-                    <strong>${autoSubmit ? "⏰ انتهى الوقت!" : "🎉 تم إنهاء الكويز!"}</strong>
-                    <div style="color:var(--muted);margin-top:8px;">
-                        إجابات صحيحة: ${correct} / ${quizQuestions.length}
-                        <br>وقت الكويز: ${minutes}:${seconds}
+                    <div>
+                        <strong>${autoSubmit ? "⏰ انتهى الوقت!" : "🎉 تم إنهاء الكويز!"}</strong>
+                        <div style="color:var(--muted);margin-top:8px;">
+                            إجابات صحيحة: ${correct} / ${quizQuestions.length}
+                            <br>وقت الكويز: ${minutes}:${seconds}
+                        </div>
                     </div>
-                </div>
-                <div class="score-number">${totalScore} XP</div>
-            `;
+                    <div class="score-number">${totalScore} XP</div>
+                `;
         }
 
         function showSavedQuizResult() {
@@ -1971,15 +1969,15 @@
             const result = document.getElementById("quizResult");
             result.style.display = "flex";
             result.innerHTML = `
-                <div>
-                    <strong>✓ نتيجتك محفوظة</strong>
-                    <div style="color:var(--muted);margin-top:8px;">
-                        نقاط الكويز: ${quizScore} XP
-                        <br>وقت الكويز: ${minutes}:${seconds}
+                    <div>
+                        <strong>✓ نتيجتك محفوظة</strong>
+                        <div style="color:var(--muted);margin-top:8px;">
+                            نقاط الكويز: ${quizScore} XP
+                            <br>وقت الكويز: ${minutes}:${seconds}
+                        </div>
                     </div>
-                </div>
-                <div class="score-number">${totalScore} XP</div>
-            `;
+                    <div class="score-number">${totalScore} XP</div>
+                `;
         }
 
         async function saveLeaderboard() {
@@ -2038,37 +2036,37 @@
                 }
 
                 container.innerHTML = `
-                    <div style="overflow-x:auto;">
-                        <table class="leaderboard-table">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>المتدرب</th>
-                                    <th>الغرف</th>
-                                    <th>الكويز</th>
-                                    <th>المجموع</th>
-                                    <th>الوقت </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${rows.map((row, index) => {
+                        <div style="overflow-x:auto;">
+                            <table class="leaderboard-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>المتدرب</th>
+                                        <th>الغرف</th>
+                                        <th>الكويز</th>
+                                        <th>المجموع</th>
+                                        <th>الوقت </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${rows.map((row, index) => {
                     const t = row.quizTimeSeconds;
                     const time = t == null ? "—" : `${String(Math.floor(t / 60)).padStart(2, "0")}:${String(t % 60).padStart(2, "0")}`;
                     return `
-                                        <tr>
-                                            <td class="rank">${index + 1}</td>
-                                            <td>${escapeHTML(String(row.name))}</td>
-                                            <td>${row.roomScore || 0}</td>
-                                            <td>${row.quizScore || 0}</td>
-                                            <td><strong>${row.totalScore || 0}</strong></td>
-                                            <td>${time}</td>
-                                        </tr>
-                                    `;
+                                            <tr>
+                                                <td class="rank">${index + 1}</td>
+                                                <td>${escapeHTML(String(row.name))}</td>
+                                                <td>${row.roomScore || 0}</td>
+                                                <td>${row.quizScore || 0}</td>
+                                                <td><strong>${row.totalScore || 0}</strong></td>
+                                                <td>${time}</td>
+                                            </tr>
+                                        `;
                 }).join("")}
-                            </tbody>
-                        </table>
-                    </div>
-                `;
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
             } catch (error) {
                 container.innerHTML = '<div class="leaderboard-empty">تعذر تحميل الترتيب. تأكد من إعدادات Firestore.</div>';
                 console.log("Leaderboard load error:", error);
