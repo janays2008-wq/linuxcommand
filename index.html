@@ -30,7 +30,7 @@
         } from
             "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-      
+
 
         try {
 
@@ -800,7 +800,7 @@
 
                 <span class="dot"></span>
 
-                SECURE TRAINING ENVIRONMENT 
+                SECURE TRAINING ENVIRONMENT
 
             </div>
 
@@ -919,7 +919,7 @@
                             <h2>أساسيات Ubuntu والملفات</h2>
                             <p class="room-description">غرفة واحدة تجمع أساسيات Linux والملفات بشكل سريع.</p>
                         </div>
-                        <span class="difficulty easy">مبتدئ</span>
+                        <span class="difficulty easy">beginner</span>
                     </div>
                     <div class="room-tags">
                         <span class="tag">whoami</span><span class="tag">pwd</span><span class="tag">ls</span><span class="tag">cd</span><span class="tag">touch</span><span class="tag">cat</span>
@@ -935,9 +935,9 @@
                         <div>
                             <div class="room-number">الغرفة 02 — LOGS</div>
                             <h2>اقرأ الـ Log</h2>
-                            <p class="room-description">تعلمي قراءة السجلات والعثور على محاولات الدخول الفاشلة.</p>
+                            <p class="room-description">تعلم قراءة السجلات والعثور على محاولات الدخول الفاشلة.</p>
                         </div>
-                        <span class="difficulty easy">مبتدئ</span>
+                        <span class="difficulty easy">beginner</span>
                     </div>
                     <div class="room-tags">
                         <span class="tag">auth.log</span><span class="tag">cat</span><span class="tag">grep</span>
@@ -953,9 +953,9 @@
                         <div>
                             <div class="room-number">الغرفة 03 — SOC ANALYSIS</div>
                             <h2>أنت الآن محلل SOC</h2>
-                            <p class="room-description">اربطي بين الأحداث وحددي الـ Source IP للمحاولات الفاشلة.</p>
+                            <p class="room-description">اربط بين الأحداث وحددي الـ Source IP للمحاولات الفاشلة.</p>
                         </div>
-                        <span class="difficulty easy">مبتدئ</span>
+                        <span class="difficulty easy">beginner</span>
                     </div>
                     <div class="room-tags">
                         <span class="tag">tail</span><span class="tag">Failed Login</span><span class="tag">Source IP</span>
@@ -973,7 +973,7 @@
                             <h2>الكويز النهائي ⚡</h2>
                             <p class="room-description">5 أسئلة سهلة وسريعة لمراجعة أهم أوامر Linux وقراءة الـ Logs.</p>
                         </div>
-                        <span class="difficulty easy">سهل</span>
+                        <span class="difficulty easy">quiz</span>
                     </div>
                     <div class="room-tags">
                         <span class="tag">5 أسئلة</span><span class="tag">مؤقت 5 دقائق</span><span class="tag">SOC Basics</span>
@@ -1062,7 +1062,7 @@
                 الترتيب حسب مجموع النقاط، وعند التعادل حسب أسرع وقت لإنهاء الكويز.
             </p>
             <div id="leaderboardContent">
-                <div class="leaderboard-empty">أكملي التحدي لعرض النتائج.</div>
+                <div class="leaderboard-empty">أكمل التحدي لعرض النتائج.</div>
             </div>
         </section>
 
@@ -1093,16 +1093,16 @@
                     {
                         title: "من أنت وأين أنت؟",
                         points: 15,
-                        theory: `الأمر <code>whoami</code> يعرض اسم المستخدم الحالي، و<code>pwd</code> يعرض مكانك الحالي داخل النظام.<br><br>🖥️ جرّبي: <code>whoami</code> ثم <code>pwd</code>`,
+                        theory: `الأمر <code>whoami</code> يعرض اسم المستخدم الحالي، و<code>pwd</code> يعرض مكانك الحالي داخل النظام.<br><br>🖥️ جرّب: <code>whoami</code> ثم <code>pwd</code>`,
                         command: "whoami",
                         output: "analyst",
                         question: "ما اسم المستخدم الظاهر؟",
                         answers: ["analyst"]
                     },
                     {
-                        title: "اعرض الملفات وادخلي إلى Logs",
+                        title: "اعرض الملفات وادخل إلى Logs",
                         points: 20,
-                        theory: `الأمر <code>ls</code> يعرض الملفات والمجلدات، و<code>cd</code> يستخدم للتنقل بينها.<br><br>🖥️ جرّبي: <code>ls</code> ثم <code>cd logs</code>`,
+                        theory: `الأمر <code>ls</code> يعرض الملفات والمجلدات، و<code>cd</code> يستخدم للتنقل بينها.<br><br>🖥️ جرّب: <code>ls</code> ثم <code>cd logs</code>`,
                         command: "ls",
                         output: "Documents  Downloads  logs  notes.txt",
                         question: "ما اسم مجلد السجلات؟",
@@ -1111,7 +1111,7 @@
                     {
                         title: "أنشئ واقرأ ملفًا",
                         points: 25,
-                        theory: `الأمر <code>touch</code> ينشئ ملفًا، و<code>cat</code> يعرض محتواه.<br><br>🖥️ جرّبي: <code>touch evidence.txt</code> ثم <code>cat evidence.txt</code>`,
+                        theory: `الأمر <code>touch</code> ينشئ ملفًا، و<code>cat</code> يعرض محتواه.<br><br>🖥️ جرّب: <code>touch evidence.txt</code> ثم <code>cat evidence.txt</code>`,
                         command: "cat evidence.txt",
                         output: "User=analyst\nStatus=active\nIP=192.168.10.25",
                         question: "ما الـ IP الموجود داخل الملف؟",
@@ -1121,12 +1121,12 @@
             },
             {
                 title: "الغرفة 02 — LOGS",
-                description: "اقرئي الـ Log وحددي الأحداث المهمة باستخدام أوامر بسيطة.",
+                description: "اقرأ الـ Log وحدد الأحداث المهمة باستخدام أوامر بسيطة.",
                 tasks: [
                     {
                         title: "اقرئي auth.log",
                         points: 20,
-                        theory: `الـ <code>Log</code> هو سجل للأحداث، وقد يحتوي على الوقت والمستخدم والـ IP والنتيجة.<br><br>🖥️ جرّبي: <code>cat /var/log/auth.log</code>`,
+                        theory: `الـ <code>Log</code> هو سجل للأحداث، وقد يحتوي على الوقت والمستخدم والـ IP والنتيجة.<br><br>🖥️ جرّب: <code>cat /var/log/auth.log</code>`,
                         command: "cat /var/log/auth.log",
                         output: "2026-09-17 18:40:02 Accepted password for analyst from 192.168.10.25\n2026-09-17 18:41:33 Failed password for admin from 192.168.10.50\n2026-09-17 18:42:11 Failed password for admin from 192.168.10.50",
                         question: "ما اسم ملف الـ Log الذي نحلله؟",
@@ -1135,7 +1135,7 @@
                     {
                         title: "ابحث عن Failed",
                         points: 25,
-                        theory: `الأمر <code>grep</code> يبحث عن كلمة محددة داخل الـ Log، و<code>Failed</code> تعني أن محاولة الدخول لم تنجح.<br><br>🖥️ جرّبي: <code>grep "Failed" /var/log/auth.log</code>`,
+                        theory: `الأمر <code>grep</code> يبحث عن كلمة محددة داخل الـ Log، و<code>Failed</code> تعني أن محاولة الدخول لم تنجح.<br><br>🖥️ جرّب: <code>grep "Failed" /var/log/auth.log</code>`,
                         command: 'grep "Failed" /var/log/auth.log',
                         output: "18:41:33 Failed password for admin from 192.168.10.50\n18:42:11 Failed password for admin from 192.168.10.50",
                         question: "كم محاولة دخول فاشلة ظهرت؟",
@@ -1145,12 +1145,12 @@
             },
             {
                 title: "الغرفة 03 — SOC ANALYSIS",
-                description: "اربطي بين الأحداث وحددي مصدر المحاولات الفاشلة.",
+                description: "اربط بين الأحداث وحدد مصدر المحاولات الفاشلة.",
                 tasks: [
                     {
                         title: "اعرض آخر الأحداث",
                         points: 20,
-                        theory: `الأمر <code>tail</code> يعرض آخر أسطر الملف، وهذا يساعد محلل SOC على مشاهدة أحدث الأحداث بسرعة.<br><br>🖥️ جرّبي: <code>tail -n 3 /var/log/auth.log</code>`,
+                        theory: `الأمر <code>tail</code> يعرض آخر أسطر الملف، وهذا يساعد محلل SOC على مشاهدة أحدث الأحداث بسرعة.<br><br>🖥️جرّب : <code>tail -n 3 /var/log/auth.log</code>`,
                         command: "tail -n 3 /var/log/auth.log",
                         output: "18:40 Accepted password analyst\n18:41 Failed password admin 192.168.10.50\n18:42 Failed password admin 192.168.10.50",
                         question: "ما الأمر الذي يعرض آخر 3 أسطر؟",
@@ -1333,133 +1333,129 @@
 
                 div.innerHTML = `
 
-            <div class="task-head">
+                <div class="task-head">
 
-                <span class="task-number">
+                    <span class="task-number">
 
-                    TASK ${String(index + 1).padStart(2, "0")}
+                        TASK ${String(index + 1).padStart(2, "0")}
 
-                </span>
+                    </span>
 
-                <span class="task-points">
+                    <span class="task-points">
 
-                    +${task.points} XP
-
-                </span>
-
-            </div>
-
-            <h3>${task.title}</h3>
-
-            <div class="theory">
-
-                <div class="theory-title">
-
-                    💡 قبل ما تبدأ
-
-                </div>
-
-                ${task.theory}
-
-            </div>
-
-            <div class="terminal">
-
-                <div class="terminal-bar">
-
-                    <span class="terminal-dot"></span>
-
-                    <span class="terminal-dot"></span>
-
-                    <span class="terminal-dot"></span>
-
-                    <span class="terminal-title">
-
-                        ubuntu@cyberlab:~$
+                        +${task.points} XP
 
                     </span>
 
                 </div>
 
-                <div class="terminal-body">
+                <h3>${task.title}</h3>
 
-                    <span class="prompt">analyst@ubuntu:~$ </span>
+                <div class="theory">
 
-                    <span class="command">${escapeHTML(task.command)}</span>
+                    <div class="theory-title">
 
-                    <br>
+                        💡 قبل ما تبدأ
 
-                    ${escapeHTML(task.output)}
+                    </div>
+
+                    ${task.theory}
 
                 </div>
 
-                <div class="command-box">
+                <div class="terminal">
 
-                    <span>$</span>
+                    <div class="terminal-bar">
+
+                        <span class="terminal-dot"></span>
+
+                        <span class="terminal-dot"></span>
+
+                        <span class="terminal-dot"></span>
+
+                        <span class="terminal-title">
+
+                            ubuntu@cyberlab:~$
+
+                        </span>
+
+                    </div>
+
+                    <div class="terminal-body">
+
+                        <span class="prompt">analyst@ubuntu:~$ </span>
+
+                        <span style="color:#688087;">اكتب أي أمر Linux لتجربته...</span>
+
+                    </div>
+
+                    <div class="command-box">
+
+                        <span>$</span>
+
+                        <input
+
+                            id="cmd-${taskId}"
+
+                            placeholder="اكتب الأمر هنا..."
+
+                            autocomplete="off"
+
+                            onkeydown="handleCommand(event, '${taskId}', ${index})"
+
+                        >
+
+                    </div>
+
+                </div>
+
+                <div class="question">
+
+                    ❓ ${task.question}
+
+                </div>
+
+                <div class="answer-row">
 
                     <input
 
-                        id="cmd-${taskId}"
+                        id="answer-${taskId}"
 
-                        placeholder="اكتب الأمر هنا..."
+                        placeholder="اكتب إجابتك هنا..."
 
-                        autocomplete="off"
-
-                        onkeydown="handleCommand(event, '${taskId}', ${index})"
+                        ${isDone ? "disabled" : ""}
 
                     >
 
+                    <button
+
+                        class="primary"
+
+                        onclick="checkAnswer(${index})"
+
+                        ${isDone ? "disabled" : ""}
+
+                    >
+
+                        تحقق
+
+                    </button>
+
                 </div>
 
-            </div>
+                <div class="hint">
 
-            <div class="question">
+                    💡 تلميح: اقرأ الـشرح فوق ثم جرّب الأمر المعروض في الـTerminal.
 
-                ❓ ${task.question}
+                </div>
 
-            </div>
+                <div class="feedback" id="feedback-${taskId}">
 
-            <div class="answer-row">
+                    ${isDone ? '<span class="correct">✓ Task مكتملة</span>' : ""}
 
-                <input
+                </div>
 
-                    id="answer-${taskId}"
-
-                    placeholder="اكتب إجابتك هنا..."
-
-                    ${isDone ? "disabled" : ""}
-
-                >
-
-                <button
-
-                    class="primary"
-
-                    onclick="checkAnswer(${index})"
-
-                    ${isDone ? "disabled" : ""}
-
-                >
-
-                    تحقق
-
-                </button>
-
-            </div>
-
-            <div class="hint">
-
-                💡 تلميح: اقرأ الـشرح فوق ثم جرّب الأمر المعروض في الـTerminal.
-
-            </div>
-
-            <div class="feedback" id="feedback-${taskId}">
-
-                ${isDone ? '<span class="correct">✓ Task مكتملة</span>' : ""}
-
-            </div>
-
-            `;
+                `;
 
                 tasksContainer.appendChild(div);
 
@@ -1481,25 +1477,35 @@
 
             const value = input.value.trim();
 
+            if (!value) return;
+
             const task = rooms[currentRoom].tasks[index];
 
             const terminal = input.closest(".terminal");
 
             const body = terminal.querySelector(".terminal-body");
 
+            const response = getCommandResponse(value, task);
+
+            if (response === "__CLEAR__") {
+                body.innerHTML = `<span class="prompt">analyst@ubuntu:~$ </span>`;
+                input.value = "";
+                return;
+            }
+
             body.innerHTML += `
 
-        <br>
+            <br>
 
-        <span class="prompt">analyst@ubuntu:~$ </span>
+            <span class="prompt">analyst@ubuntu:~$ </span>
 
-        <span class="command">${escapeHTML(value)}</span>
+            <span class="command">${escapeHTML(value)}</span>
 
-        <br>
+            <br>
 
-        <span>${escapeHTML(getCommandResponse(value, task))}</span>
+            <span>${escapeHTML(response || "")}</span>
 
-        `;
+            `;
 
             input.value = "";
 
@@ -1508,26 +1514,89 @@
 
         function getCommandResponse(command, task) {
 
-            const clean = command.trim().toLowerCase();
+            const clean = command.trim().replace(/\s+/g, " ").toLowerCase();
 
-            if (clean === task.command.toLowerCase()) {
+            /*
+             * Terminal simulator:
+             * كل أمر معروف له نتيجة مستقلة، وليس فقط أمر السؤال.
+             * مهم: نتيجة أمر السؤال لا تظهر مسبقًا؛ تظهر فقط بعد كتابة الأمر.
+             */
 
-                return task.output;
+            const commandOutputs = {
+                "whoami": "analyst",
+
+                "pwd": "/home/analyst",
+
+                "ls": "Documents  Downloads  logs  notes.txt",
+
+                "ls -l": "total 16\ndrwxr-xr-x 2 analyst analyst 4096 Documents\ndrwxr-xr-x 2 analyst analyst 4096 Downloads\ndrwxr-xr-x 2 analyst analyst 4096 logs\n-rw-r--r-- 1 analyst analyst   42 notes.txt",
+
+                "cd logs": "",
+
+                "cd /var/log": "",
+
+                "cd ..": "",
+
+                "cd ~": "",
+
+                "touch evidence.txt": "",
+
+                "cat evidence.txt": "User=analyst\nStatus=active\nIP=192.168.10.25",
+
+                "cat notes.txt": "SOC Training Notes\nStatus: active\nEnvironment: Ubuntu",
+
+                "cat /var/log/auth.log": "2026-09-17 18:40:02 Accepted password for analyst from 192.168.10.25\n2026-09-17 18:41:33 Failed password for admin from 192.168.10.50\n2026-09-17 18:42:11 Failed password for admin from 192.168.10.50",
+
+                'grep "Failed" /var/log/auth.log': "18:41:33 Failed password for admin from 192.168.10.50\n18:42:11 Failed password for admin from 192.168.10.50",
+
+                "grep failed /var/log/auth.log": "18:41:33 Failed password for admin from 192.168.10.50\n18:42:11 Failed password for admin from 192.168.10.50",
+
+                "tail -n 3 /var/log/auth.log": "18:40 Accepted password analyst\n18:41 Failed password admin 192.168.10.50\n18:42 Failed password admin 192.168.10.50",
+
+                "tail -n 3 security.log": "Failed login - admin - Source IP: 192.168.10.50\nFailed login - admin - Source IP: 192.168.10.50\nFailed login - admin - Source IP: 192.168.10.50",
+
+                'grep "Failed" security.log': "Failed login - admin - Source IP: 192.168.10.50\nFailed login - admin - Source IP: 192.168.10.50\nFailed login - admin - Source IP: 192.168.10.50",
+
+                "grep failed security.log": "Failed login - admin - Source IP: 192.168.10.50\nFailed login - admin - Source IP: 192.168.10.50\nFailed login - admin - Source IP: 192.168.10.50",
+
+                "date": "Thu Sep 17 18:45:00 UTC 2026",
+
+                "hostname": "cyberlab",
+
+                "uname": "Linux",
+
+                "uname -a": "Linux cyberlab 6.8.0-31-generic x86_64 GNU/Linux",
+
+                "clear": "__CLEAR__",
+
+                "help": "Available commands: whoami, pwd, ls, cd, touch, cat, grep, tail, date, hostname, uname, clear, help"
+            };
+
+            if (Object.prototype.hasOwnProperty.call(commandOutputs, clean)) {
+                return commandOutputs[clean];
             }
 
-            if (clean === "clear") {
-
-                return "Terminal cleared.";
+            /*
+             * دعم بعض الصيغ الإضافية البسيطة حتى لا يكون التيرمنال محدودًا جدًا.
+             */
+            if (/^cd\s+/.test(clean)) {
+                return "";
             }
 
-            if (clean === "help") {
-
-                return "Try the command shown in the task explanation.";
+            if (/^cat\s+/.test(clean)) {
+                return "cat: الملف غير موجود في بيئة التدريب.";
             }
 
-            return "Command executed in training simulator. Try the command mentioned in the explanation.";
+            if (/^grep\s+/.test(clean)) {
+                return "grep: لم يتم العثور على نتائج مطابقة.";
+            }
+
+            if (/^tail(\s|$)/.test(clean)) {
+                return "tail: لا توجد بيانات لهذا الملف في بيئة التدريب.";
+            }
+
+            return `bash: ${command.trim()}: command not found`;
         }
-
 
         /* ============================================================
            ANSWERS
@@ -1563,9 +1632,9 @@
 
                     `<span class="correct">
 
-                ✓ إجابة صحيحة! +${task.points} XP
+                    ✓ إجابة صحيحة! +${task.points} XP
 
-            </span>`;
+                </span>`;
 
                 input.disabled = true;
 
@@ -1605,9 +1674,9 @@
 
                     `<span class="wrong">
 
-                ✗ ليست الإجابة المطلوبة — ارجع للشرح وجرب مرة ثانية.
+                    ✗ ليست الإجابة المطلوبة — ارجع للشرح وجرب مرة ثانية.
 
-            </span>`;
+                </span>`;
 
             }
         }
@@ -1769,12 +1838,12 @@
 
         function showQuiz() {
             if (!userName) {
-                alert("اكتبي اسمك أولاً.");
+                alert("اكتب اسمك أولاً.");
                 return;
             }
 
             if (completedTasks.size < rooms.reduce((sum, room) => sum + room.tasks.length, 0)) {
-                alert("أكملي الغرف الثلاث أولاً ثم افتحي الغرفة 04 — الكويز النهائي.");
+                alert("أكمل الغرف الثلاث أولاً ثم افتح الغرفة 04 — الكويز النهائي.");
                 return;
             }
 
@@ -1805,16 +1874,16 @@
                 const div = document.createElement("div");
                 div.className = "quiz-question";
                 div.innerHTML = `
-                <h3>${index + 1}. ${item.q}</h3>
-                <div class="quiz-options">
-                    ${item.options.map((option, optIndex) => `
-                        <label class="quiz-option">
-                            <input type="radio" name="quiz-${index}" value="${optIndex}">
-                            <span>${option}</span>
-                        </label>
-                    `).join("")}
-                </div>
-            `;
+                    <h3>${index + 1}. ${item.q}</h3>
+                    <div class="quiz-options">
+                        ${item.options.map((option, optIndex) => `
+                            <label class="quiz-option">
+                                <input type="radio" name="quiz-${index}" value="${optIndex}">
+                                <span>${option}</span>
+                            </label>
+                        `).join("")}
+                    </div>
+                `;
                 container.appendChild(div);
             });
         }
@@ -1879,15 +1948,15 @@
             const result = document.getElementById("quizResult");
             result.style.display = "flex";
             result.innerHTML = `
-            <div>
-                <strong>${autoSubmit ? "⏰ انتهى الوقت!" : "🎉 تم إنهاء الكويز!"}</strong>
-                <div style="color:var(--muted);margin-top:8px;">
-                    إجابات صحيحة: ${correct} / ${quizQuestions.length}
-                    <br>وقت الكويز: ${minutes}:${seconds}
+                <div>
+                    <strong>${autoSubmit ? "⏰ انتهى الوقت!" : "🎉 تم إنهاء الكويز!"}</strong>
+                    <div style="color:var(--muted);margin-top:8px;">
+                        إجابات صحيحة: ${correct} / ${quizQuestions.length}
+                        <br>وقت الكويز: ${minutes}:${seconds}
+                    </div>
                 </div>
-            </div>
-            <div class="score-number">${totalScore} XP</div>
-        `;
+                <div class="score-number">${totalScore} XP</div>
+            `;
         }
 
         function showSavedQuizResult() {
@@ -1902,15 +1971,15 @@
             const result = document.getElementById("quizResult");
             result.style.display = "flex";
             result.innerHTML = `
-            <div>
-                <strong>✓ نتيجتك محفوظة</strong>
-                <div style="color:var(--muted);margin-top:8px;">
-                    نقاط الكويز: ${quizScore} XP
-                    <br>وقت الكويز: ${minutes}:${seconds}
+                <div>
+                    <strong>✓ نتيجتك محفوظة</strong>
+                    <div style="color:var(--muted);margin-top:8px;">
+                        نقاط الكويز: ${quizScore} XP
+                        <br>وقت الكويز: ${minutes}:${seconds}
+                    </div>
                 </div>
-            </div>
-            <div class="score-number">${totalScore} XP</div>
-        `;
+                <div class="score-number">${totalScore} XP</div>
+            `;
         }
 
         async function saveLeaderboard() {
@@ -1939,7 +2008,7 @@
             const container = document.getElementById("leaderboardContent");
 
             if (!window.firebaseReady) {
-                container.innerHTML = '<div class="leaderboard-empty">فعّلي Firebase/Firestore لعرض ترتيب المشاركين من جميع الأجهزة.</div>';
+                container.innerHTML = '<div class="leaderboard-empty">فعّل Firebase/Firestore لعرض ترتيب المشاركين من جميع الأجهزة.</div>';
                 return;
             }
 
@@ -1969,39 +2038,39 @@
                 }
 
                 container.innerHTML = `
-                <div style="overflow-x:auto;">
-                    <table class="leaderboard-table">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>المتدرب</th>
-                                <th>الغرف</th>
-                                <th>الكويز</th>
-                                <th>المجموع</th>
-                                <th>الوقت عند التعادل</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${rows.map((row, index) => {
+                    <div style="overflow-x:auto;">
+                        <table class="leaderboard-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>المتدرب</th>
+                                    <th>الغرف</th>
+                                    <th>الكويز</th>
+                                    <th>المجموع</th>
+                                    <th>الوقت </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${rows.map((row, index) => {
                     const t = row.quizTimeSeconds;
                     const time = t == null ? "—" : `${String(Math.floor(t / 60)).padStart(2, "0")}:${String(t % 60).padStart(2, "0")}`;
                     return `
-                                    <tr>
-                                        <td class="rank">${index + 1}</td>
-                                        <td>${escapeHTML(String(row.name))}</td>
-                                        <td>${row.roomScore || 0}</td>
-                                        <td>${row.quizScore || 0}</td>
-                                        <td><strong>${row.totalScore || 0}</strong></td>
-                                        <td>${time}</td>
-                                    </tr>
-                                `;
+                                        <tr>
+                                            <td class="rank">${index + 1}</td>
+                                            <td>${escapeHTML(String(row.name))}</td>
+                                            <td>${row.roomScore || 0}</td>
+                                            <td>${row.quizScore || 0}</td>
+                                            <td><strong>${row.totalScore || 0}</strong></td>
+                                            <td>${time}</td>
+                                        </tr>
+                                    `;
                 }).join("")}
-                        </tbody>
-                    </table>
-                </div>
-            `;
+                            </tbody>
+                        </table>
+                    </div>
+                `;
             } catch (error) {
-                container.innerHTML = '<div class="leaderboard-empty">تعذر تحميل الترتيب. تأكدي من إعدادات Firestore.</div>';
+                container.innerHTML = '<div class="leaderboard-empty">تعذر تحميل الترتيب. تأكد من إعدادات Firestore.</div>';
                 console.log("Leaderboard load error:", error);
             }
         }
