@@ -8,33 +8,6 @@
 
     <!-- Firebase -->
     <script type="module">
-    /*
-    ============================================================
-    🔥 FIREBASE CONFIG
-    ============================================================
-
-    بعد إنشاء مشروع Firebase:
-    1. افتحي Project Settings
-    2. أضيفي Web App
-    3. انسخي firebaseConfig
-    4. ضعي القيم مكان القيم الموجودة هنا
-
-    ثم فعّلي:
-    Firestore Database
-    ============================================================
-    */
-
-    import { initializeApp } from
-    "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-    import {
-        getFirestore,
-        doc,
-        setDoc,
-        getDoc
-    } from
-    "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
         const firebaseConfig = {
             apiKey: "AIzaSyAafGYlNphbg9Wx4lycEI9Ah9AKICkUwU0",
             authDomain: "linuxcommand-324f7.firebaseapp.com",
@@ -44,23 +17,37 @@
             appId: "1:208107976618:web:9b95b652c1c69dbeff9dd3",
             measurementId: "G-DZDNX3M4WH"
         };
+        import { initializeApp } from
+            "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-    try {
+        import {
+            getFirestore,
+            collection,
+            getDocs,
+            doc,
+            setDoc,
+            getDoc
+        } from
+            "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        const app = initializeApp(firebaseConfig);
+      
 
-        window.db = getFirestore(app);
+        try {
 
-        window.firebaseReady = true;
+            const app = initializeApp(firebaseConfig);
 
-        console.log("Firebase connected.");
+            window.db = getFirestore(app);
 
-    } catch (error) {
+            window.firebaseReady = true;
 
-        console.log("Firebase is not configured yet.");
+            console.log("Firebase connected.");
 
-        window.firebaseReady = false;
-    }
+        } catch (error) {
+
+            console.log("Firebase is not configured yet.");
+
+            window.firebaseReady = false;
+        }
     </script>
 
     <style>
@@ -648,6 +635,123 @@
             font-weight: bold;
         }
 
+
+        /* ================= QUIZ ================= */
+
+        .quiz-section {
+            display: none;
+            margin-top: 55px;
+        }
+
+            .quiz-section.active {
+                display: block;
+            }
+
+        .quiz-header {
+            padding: 28px;
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            background: var(--panel);
+        }
+
+        .quiz-timer {
+            margin-top: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            padding: 14px 18px;
+            border: 1px solid rgba(255,200,87,.2);
+            background: rgba(255,200,87,.05);
+            border-radius: 12px;
+            color: var(--yellow);
+            font-family: "JetBrains Mono";
+        }
+
+        .quiz-question {
+            margin-top: 16px;
+            padding: 22px;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            background: var(--panel);
+        }
+
+            .quiz-question h3 {
+                margin: 0 0 14px;
+                font-size: 18px;
+            }
+
+        .quiz-options {
+            display: grid;
+            gap: 9px;
+        }
+
+        .quiz-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            background: #071117;
+        }
+
+            .quiz-option:hover {
+                border-color: #2a515c;
+            }
+
+        .quiz-actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* ================= LEADERBOARD ================= */
+
+        .leaderboard-section {
+            margin-top: 60px;
+            padding: 28px;
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            background: var(--panel);
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 18px;
+        }
+
+            .leaderboard-table th,
+            .leaderboard-table td {
+                padding: 13px 10px;
+                border-bottom: 1px solid var(--border);
+                text-align: center;
+            }
+
+            .leaderboard-table th {
+                color: var(--green);
+                font-size: 13px;
+            }
+
+            .leaderboard-table td {
+                color: #cfe0e4;
+            }
+
+        .leaderboard-empty {
+            color: var(--muted);
+            padding: 20px 0;
+        }
+
+        .rank {
+            color: var(--yellow);
+            font-family: "JetBrains Mono";
+            font-weight: bold;
+        }
+
         /* ================= FOOTER ================= */
 
         footer {
@@ -696,7 +800,7 @@
 
                 <span class="dot"></span>
 
-                SECURE TRAINING ENVIRONMENT
+                SECURE TRAINING ENVIRONMENT 
 
             </div>
 
@@ -783,7 +887,7 @@
 
                 <span>تقدمك في المختبر</span>
 
-                <span id="progressText">0 / 16 مهمة</span>
+                <span id="progressText">0 / 12 مهمة</span>
 
             </div>
 
@@ -796,6 +900,10 @@
         </section>
 
 
+        <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="secondary" onclick="loadLeaderboard()">🔄 تحديث المتصدرين</button>
+        </div>
+
         <!-- ================= ROOMS ================= -->
 
         <section id="roomsSection">
@@ -804,214 +912,80 @@
 
             <div class="rooms">
 
-
-                <!-- ROOM 1 -->
-
                 <div class="room">
-
                     <div class="room-top">
-
                         <div>
-
-                            <div class="room-number">الغرفة 01 — LINUX ZERO</div>
-
-                            <h2>أول خطوة داخل Ubuntu</h2>
-
-                            <p class="room-description">
-
-                                نتعرف على المستخدم، مكاننا الحالي، والملفات الأساسية.
-
-                            </p>
-
+                            <div class="room-number">الغرفة 01 — LINUX + FILES</div>
+                            <h2>أساسيات Ubuntu والملفات</h2>
+                            <p class="room-description">غرفة واحدة تجمع أساسيات Linux والملفات بشكل سريع.</p>
                         </div>
-
                         <span class="difficulty easy">مبتدئ</span>
-
                     </div>
-
                     <div class="room-tags">
-
-                        <span class="tag">whoami</span>
-
-                        <span class="tag">pwd</span>
-
-                        <span class="tag">ls</span>
-
-                        <span class="tag">cd</span>
-
+                        <span class="tag">whoami</span><span class="tag">pwd</span><span class="tag">ls</span><span class="tag">cd</span><span class="tag">touch</span><span class="tag">cat</span>
                     </div>
-
                     <div class="room-footer">
-
-                        <span class="points">40 نقطة</span>
-
-                        <button class="primary" onclick="openRoom(0)">
-
-                            دخول الغرفة
-
-                        </button>
-
+                        <span class="points">60 نقطة</span>
+                        <button class="primary" onclick="openRoom(0)">دخول الغرفة</button>
                     </div>
-
                 </div>
 
-
-                <!-- ROOM 2 -->
-
                 <div class="room">
-
                     <div class="room-top">
-
                         <div>
-
-                            <div class="room-number">الغرفة 02 — FILES</div>
-
-                            <h2>الملفات والأدلة</h2>
-
-                            <p class="room-description">
-
-                                إنشاء ملف، كتابة بيانات داخله، ثم البحث وقراءة المحتوى.
-
-                            </p>
-
-                        </div>
-
-                        <span class="difficulty easy">مبتدئ</span>
-
-                    </div>
-
-                    <div class="room-tags">
-
-                        <span class="tag">touch</span>
-
-                        <span class="tag">cat</span>
-
-                        <span class="tag">grep</span>
-
-                        <span class="tag">echo</span>
-
-                    </div>
-
-                    <div class="room-footer">
-
-                        <span class="points">50 نقطة</span>
-
-                        <button class="primary" onclick="openRoom(1)">
-
-                            دخول الغرفة
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <!-- ROOM 3 -->
-
-                <div class="room">
-
-                    <div class="room-top">
-
-                        <div>
-
-                            <div class="room-number">الغرفة 03 — LOGS</div>
-
+                            <div class="room-number">الغرفة 02 — LOGS</div>
                             <h2>اقرأ الـ Log</h2>
-
-                            <p class="room-description">
-
-                                أول تجربة حقيقية مع السجلات: IP، المستخدم، الوقت، والنتيجة.
-
-                            </p>
-
+                            <p class="room-description">تعلمي قراءة السجلات والعثور على محاولات الدخول الفاشلة.</p>
                         </div>
-
                         <span class="difficulty easy">مبتدئ</span>
-
                     </div>
-
                     <div class="room-tags">
-
-                        <span class="tag">auth.log</span>
-
-                        <span class="tag">cat</span>
-
-                        <span class="tag">grep</span>
-
-                        <span class="tag">tail</span>
-
+                        <span class="tag">auth.log</span><span class="tag">cat</span><span class="tag">grep</span>
                     </div>
-
                     <div class="room-footer">
-
-                        <span class="points">65 نقطة</span>
-
-                        <button class="primary" onclick="openRoom(2)">
-
-                            دخول الغرفة
-
-                        </button>
-
+                        <span class="points">45 نقطة</span>
+                        <button class="primary" onclick="openRoom(1)">دخول الغرفة</button>
                     </div>
-
                 </div>
 
-
-                <!-- ROOM 4 -->
+                <div class="room">
+                    <div class="room-top">
+                        <div>
+                            <div class="room-number">الغرفة 03 — SOC ANALYSIS</div>
+                            <h2>أنت الآن محلل SOC</h2>
+                            <p class="room-description">اربطي بين الأحداث وحددي الـ Source IP للمحاولات الفاشلة.</p>
+                        </div>
+                        <span class="difficulty easy">مبتدئ</span>
+                    </div>
+                    <div class="room-tags">
+                        <span class="tag">tail</span><span class="tag">Failed Login</span><span class="tag">Source IP</span>
+                    </div>
+                    <div class="room-footer">
+                        <span class="points">45 نقطة</span>
+                        <button class="primary" onclick="openRoom(2)">دخول الغرفة</button>
+                    </div>
+                </div>
 
                 <div class="room">
-
                     <div class="room-top">
-
                         <div>
-
-                            <div class="room-number">الغرفة 04 — SOC</div>
-
-                            <h2>أنت الآن محلل SOC</h2>
-
-                            <p class="room-description">
-
-                                استخدم الـ Logs لاكتشاف محاولات الدخول الفاشلة وتحديد الـ IP المشبوه.
-
-                            </p>
-
+                            <div class="room-number">الغرفة 04 — FINAL QUIZ</div>
+                            <h2>الكويز النهائي ⚡</h2>
+                            <p class="room-description">5 أسئلة سهلة وسريعة لمراجعة أهم أوامر Linux وقراءة الـ Logs.</p>
                         </div>
-
-                        <span class="difficulty medium">متوسط</span>
-
+                        <span class="difficulty easy">سهل</span>
                     </div>
-
                     <div class="room-tags">
-
-                        <span class="tag">grep</span>
-
-                        <span class="tag">IP</span>
-
-                        <span class="tag">Failed Login</span>
-
-                        <span class="tag">Analysis</span>
-
+                        <span class="tag">5 أسئلة</span><span class="tag">مؤقت 5 دقائق</span><span class="tag">SOC Basics</span>
                     </div>
-
                     <div class="room-footer">
-
-                        <span class="points">85 نقطة</span>
-
-                        <button class="primary" onclick="openRoom(3)">
-
-                            دخول الغرفة
-
-                        </button>
-
+                        <span class="points">50 نقطة</span>
+                        <button class="primary" onclick="showQuiz()">ابدأ الكويز</button>
                     </div>
-
                 </div>
 
             </div>
-
         </section>
-
 
         <!-- ================= LAB ================= -->
 
@@ -1058,9 +1032,43 @@
         </section>
 
 
+
+        <!-- ================= FINAL QUIZ ================= -->
+        <section class="quiz-section" id="quizSection">
+            <div class="quiz-header">
+                <div class="badge">⚡ FINAL SOC QUIZ</div>
+                <h2 class="section-title" style="margin:18px 0 8px;">الكويز النظري النهائي</h2>
+                <p style="color:var(--muted);line-height:2;margin:0;">
+                    5 أسئلة سهلة تغطي أهم الأشياء التي تعلمتها في الغرف الثلاث.
+                    لديك 5 دقائق، وإذا تساوى شخصان في النقاط فالأسرع يتقدم في الترتيب.
+                </p>
+                <div class="quiz-timer">
+                    <span>⏱️ الوقت المتبقي</span>
+                    <strong id="quizTimer">05:00</strong>
+                </div>
+            </div>
+            <div id="quizQuestions"></div>
+            <div class="quiz-actions">
+                <button class="primary" id="submitQuizBtn" onclick="submitQuiz()">إنهاء الكويز وحساب النتيجة</button>
+            </div>
+            <div id="quizResult" class="score-card" style="display:none;"></div>
+        </section>
+
+        <!-- ================= LEADERBOARD ================= -->
+        <section class="leaderboard-section" id="leaderboardSection">
+            <div class="badge">🏆 LIVE LEADERBOARD</div>
+            <h2 style="margin:15px 0 5px;">ترتيب المتصدرين</h2>
+            <p style="color:var(--muted);margin-top:0;">
+                الترتيب حسب مجموع النقاط، وعند التعادل حسب أسرع وقت لإنهاء الكويز.
+            </p>
+            <div id="leaderboardContent">
+                <div class="leaderboard-empty">أكملي التحدي لعرض النتائج.</div>
+            </div>
+        </section>
+
         <footer>
 
-            CYBER BATH > SOC Training Lab
+            CYBER BATH > GDGUOJ
 
             <br>
 
@@ -1073,1210 +1081,995 @@
 
     <script>
 
-/* ============================================================
-   DATA
-============================================================ */
+        /* ============================================================
+           DATA
+        ============================================================ */
+
+        const rooms = [
+            {
+                title: "الغرفة 01 — LINUX + FILES",
+                description: "أساسيات Ubuntu والملفات في غرفة واحدة سريعة للمبتدئين.",
+                tasks: [
+                    {
+                        title: "من أنت وأين أنت؟",
+                        points: 15,
+                        theory: `الأمر <code>whoami</code> يعرض اسم المستخدم الحالي، و<code>pwd</code> يعرض مكانك الحالي داخل النظام.<br><br>🖥️ جرّبي: <code>whoami</code> ثم <code>pwd</code>`,
+                        command: "whoami",
+                        output: "analyst",
+                        question: "ما اسم المستخدم الظاهر؟",
+                        answers: ["analyst"]
+                    },
+                    {
+                        title: "اعرض الملفات وادخلي إلى Logs",
+                        points: 20,
+                        theory: `الأمر <code>ls</code> يعرض الملفات والمجلدات، و<code>cd</code> يستخدم للتنقل بينها.<br><br>🖥️ جرّبي: <code>ls</code> ثم <code>cd logs</code>`,
+                        command: "ls",
+                        output: "Documents  Downloads  logs  notes.txt",
+                        question: "ما اسم مجلد السجلات؟",
+                        answers: ["logs"]
+                    },
+                    {
+                        title: "أنشئ واقرأ ملفًا",
+                        points: 25,
+                        theory: `الأمر <code>touch</code> ينشئ ملفًا، و<code>cat</code> يعرض محتواه.<br><br>🖥️ جرّبي: <code>touch evidence.txt</code> ثم <code>cat evidence.txt</code>`,
+                        command: "cat evidence.txt",
+                        output: "User=analyst\nStatus=active\nIP=192.168.10.25",
+                        question: "ما الـ IP الموجود داخل الملف؟",
+                        answers: ["192.168.10.25"]
+                    }
+                ]
+            },
+            {
+                title: "الغرفة 02 — LOGS",
+                description: "اقرئي الـ Log وحددي الأحداث المهمة باستخدام أوامر بسيطة.",
+                tasks: [
+                    {
+                        title: "اقرئي auth.log",
+                        points: 20,
+                        theory: `الـ <code>Log</code> هو سجل للأحداث، وقد يحتوي على الوقت والمستخدم والـ IP والنتيجة.<br><br>🖥️ جرّبي: <code>cat /var/log/auth.log</code>`,
+                        command: "cat /var/log/auth.log",
+                        output: "2026-09-17 18:40:02 Accepted password for analyst from 192.168.10.25\n2026-09-17 18:41:33 Failed password for admin from 192.168.10.50\n2026-09-17 18:42:11 Failed password for admin from 192.168.10.50",
+                        question: "ما اسم ملف الـ Log الذي نحلله؟",
+                        answers: ["auth.log", "/var/log/auth.log"]
+                    },
+                    {
+                        title: "ابحث عن Failed",
+                        points: 25,
+                        theory: `الأمر <code>grep</code> يبحث عن كلمة محددة داخل الـ Log، و<code>Failed</code> تعني أن محاولة الدخول لم تنجح.<br><br>🖥️ جرّبي: <code>grep "Failed" /var/log/auth.log</code>`,
+                        command: 'grep "Failed" /var/log/auth.log',
+                        output: "18:41:33 Failed password for admin from 192.168.10.50\n18:42:11 Failed password for admin from 192.168.10.50",
+                        question: "كم محاولة دخول فاشلة ظهرت؟",
+                        answers: ["2", "two"]
+                    }
+                ]
+            },
+            {
+                title: "الغرفة 03 — SOC ANALYSIS",
+                description: "اربطي بين الأحداث وحددي مصدر المحاولات الفاشلة.",
+                tasks: [
+                    {
+                        title: "اعرض آخر الأحداث",
+                        points: 20,
+                        theory: `الأمر <code>tail</code> يعرض آخر أسطر الملف، وهذا يساعد محلل SOC على مشاهدة أحدث الأحداث بسرعة.<br><br>🖥️ جرّبي: <code>tail -n 3 /var/log/auth.log</code>`,
+                        command: "tail -n 3 /var/log/auth.log",
+                        output: "18:40 Accepted password analyst\n18:41 Failed password admin 192.168.10.50\n18:42 Failed password admin 192.168.10.50",
+                        question: "ما الأمر الذي يعرض آخر 3 أسطر؟",
+                        answers: ["tail -n 3 /var/log/auth.log", "tail -n 3"]
+                    },
+                    {
+                        title: "حدد Source IP",
+                        points: 25,
+                        theory: `بعد العثور على محاولات <code>Failed</code>، نبحث عن عنوان الـ IP الذي ظهرت منه المحاولات.<br><br>🔎 في السجل يظهر: <code>from 192.168.10.50</code>`,
+                        command: 'grep "Failed" security.log',
+                        output: "Failed login - admin - Source IP: 192.168.10.50\nFailed login - admin - Source IP: 192.168.10.50\nFailed login - admin - Source IP: 192.168.10.50",
+                        question: "ما هو الـ Source IP؟",
+                        answers: ["192.168.10.50"]
+                    }
+                ]
+            }
+        ];
+
+
+        const quizQuestions = [
+            { q: "أي أمر يعرض اسم المستخدم الحالي؟", options: ["pwd", "whoami", "ls", "tail"], answer: 1 },
+            { q: "أي أمر يعرض الملفات والمجلدات؟", options: ["ls", "cd", "grep", "touch"], answer: 0 },
+            { q: "أي أمر يستخدم للبحث عن كلمة داخل الـ Log؟", options: ["pwd", "grep", "cat", "cd"], answer: 1 },
+            { q: "ماذا تعني Failed في سجل الدخول؟", options: ["نجاح الدخول", "فشل محاولة الدخول", "حذف الحساب", "تغيير كلمة المرور"], answer: 1 },
+            { q: "في السجل، ما هو Source IP؟", options: ["192.168.10.25", "192.168.10.50", "127.0.0.1", "10.0.0.1"], answer: 1 }
+        ];
+
+
+        /* ============================================================
+           STATE
+        ============================================================ */
 
-const rooms = [
+        let currentRoom = 0;
 
-{
+        let score = 0;
 
-title:"الغرفة 01 — أول خطوة داخل Ubuntu",
+        let completedTasks = new Set();
 
-description:"قبل أن نحلل أي Log، لازم نعرف الأساسيات داخل Linux.",
+        let userName = "";
+        let quizStartedAt = null;
+        let quizTimerInterval = null;
+        let quizSubmitted = false;
+        let quizTimeSeconds = null;
+        let quizScore = 0;
+        let challengeStartedAt = null;
 
-tasks:[
 
-{
+        /* ============================================================
+           USER
+        ============================================================ */
 
-title:"من أنت؟",
+        function saveUser() {
 
-points:8,
+            const input = document.getElementById("username");
 
-theory:`
+            const name = input.value.trim();
 
-الأمر <code>whoami</code> بسيط جدًا.
+            if (!name) {
 
-هو يخبرك باسم المستخدم الذي تعمل به حاليًا.
+                document.getElementById("userMessage").innerHTML =
 
-في SOC ستتعامل كثيرًا مع معلومات المستخدمين،
+                    '<span style="color:#ff5570">اكتب اسمك أولاً.</span>';
 
-لذلك نبدأ بهذا الأمر.
+                return;
+            }
 
-<br><br>
+            userName = name;
+            if (!challengeStartedAt) {
+                challengeStartedAt = Date.now();
+            }
 
-🖥️ نفّذ:
+            localStorage.setItem("cyberBathUser", name);
 
-<code>whoami</code>
+            document.getElementById("userMessage").innerHTML =
 
-`,
+                '<span style="color:#3cff7a">✓ تم حفظ الاسم</span>';
 
-command:"whoami",
+            saveProgress();
+        }
 
-output:"analyst",
 
-question:"ما اسم المستخدم الظاهر في الـ Terminal؟",
+        function loadUser() {
 
-answers:["analyst"]
+            const saved = localStorage.getItem("cyberBathUser");
 
-},
+            if (saved) {
 
-{
+                userName = saved;
 
-title:"أين أنا؟",
+                document.getElementById("username").value = saved;
+            }
+        }
 
-points:8,
 
-theory:`
+        /* ============================================================
+           ROOM
+        ============================================================ */
 
-الأمر <code>pwd</code> يعني Print Working Directory.
+        function openRoom(index) {
 
-يخبرك بالمجلد الذي أنت موجود بداخله الآن.
+            if (!userName) {
+                document.getElementById("username").focus();
+                document.getElementById("userMessage").innerHTML =
+                    '<span style="color:#ffc857">اكتب اسمك أولاً ثم ابدأ.</span>';
+                return;
+            }
 
-تخيليه مثل سؤال:
+            if (!challengeStartedAt) {
+                challengeStartedAt = Date.now();
+                saveProgress();
+            }
 
-«أنا وين داخل النظام؟»
+            currentRoom = index;
 
-<br><br>
+            document.getElementById("roomsSection").style.display = "none";
 
-🖥️ نفّذ:
+            document.querySelector(".hero").style.display = "none";
 
-<code>pwd</code>
+            document.querySelector(".user-panel").style.display = "none";
 
-`,
+            document.querySelector(".progress-section").style.display = "none";
 
-command:"pwd",
+            document.getElementById("lab").classList.add("active");
 
-output:"/home/analyst",
+            renderRoom();
 
-question:"ما هو المسار الحالي؟",
+            window.scrollTo({
 
-answers:["/home/analyst"]
+                top: 0,
 
-},
+                behavior: "smooth"
+            });
+        }
 
-{
 
-title:"شوف الملفات",
+        function closeLab() {
 
-points:10,
+            document.getElementById("lab").classList.remove("active");
 
-theory:`
+            document.getElementById("roomsSection").style.display = "block";
 
-الأمر <code>ls</code> يعرض الملفات والمجلدات الموجودة
+            document.querySelector(".hero").style.display = "block";
 
-في المكان الحالي.
+            document.querySelector(".user-panel").style.display = "flex";
 
-قبل أن تتعامل مع أي ملف، من المفيد أن تعرف ماذا يوجد أمامك.
+            document.querySelector(".progress-section").style.display = "block";
 
-<br><br>
+            updateProgress();
 
-🖥️ نفّذ:
+            window.scrollTo({
 
-<code>ls</code>
+                top: 0,
 
-`,
+                behavior: "smooth"
+            });
+        }
 
-command:"ls",
 
-output:"Documents  Downloads  logs  notes.txt",
+        function renderRoom() {
 
-question:"ما اسم مجلد السجلات الموجود هنا؟",
+            const room = rooms[currentRoom];
 
-answers:["logs"]
+            document.getElementById("labTitle").textContent = room.title;
 
-},
+            document.getElementById("labDescription").textContent = room.description;
 
-{
+            const tasksContainer = document.getElementById("tasks");
 
-title:"ادخل مجلد الـ Logs",
+            tasksContainer.innerHTML = "";
 
-points:14,
+            room.tasks.forEach((task, index) => {
 
-theory:`
+                const taskId = currentRoom + "-" + index;
 
-الأمر <code>cd</code> يستخدم للتنقل بين المجلدات.
+                const isDone = completedTasks.has(taskId);
 
-مثلاً:
+                const div = document.createElement("div");
 
-<code>cd logs</code>
+                div.className = "task " + (isDone ? "completed" : "");
 
-يعني ادخل إلى مجلد اسمه logs.
+                div.innerHTML = `
 
-وهذا مهم جدًا لأن محلل SOC يحتاج للوصول إلى أماكن تخزين السجلات.
+            <div class="task-head">
 
-`,
+                <span class="task-number">
 
-command:"cd logs",
+                    TASK ${String(index + 1).padStart(2, "0")}
 
-output:"analyst@ubuntu:~/logs$",
+                </span>
 
-question:"ما الأمر الذي استخدمناه للدخول إلى مجلد logs؟",
+                <span class="task-points">
 
-answers:["cd logs","cd"]
-
-}
-
-]
-
-},
-
-{
-
-title:"الغرفة 02 — الملفات والأدلة",
-
-description:"الآن سنتعامل مع ملفات بسيطة تشبه فكرة جمع الأدلة.",
-
-tasks:[
-
-{
-
-title:"أنشئ ملفًا",
-
-points:10,
-
-theory:`
-
-الأمر <code>touch</code> يستطيع إنشاء ملف فارغ.
-
-في التحقيقات قد تتعامل مع ملفات كثيرة،
-
-ولذلك نحتاج معرفة أساسيات التعامل معها.
-
-<br><br>
-
-🖥️ جرّب:
-
-<code>touch evidence.txt</code>
-
-`,
-
-command:"touch evidence.txt",
-
-output:"File created: evidence.txt",
-
-question:"ما الأمر المستخدم لإنشاء ملف جديد؟",
-
-answers:["touch","touch evidence.txt"]
-
-},
-
-{
-
-title:"اقرأ الملف",
-
-points:10,
-
-theory:`
-
-الأمر <code>cat</code> يعرض محتوى الملف مباشرة.
-
-إذا كان لدينا ملف يحتوي على معلومات مهمة،
-
-فهذا من أبسط الأوامر لقراءته.
-
-<br><br>
-
-🖥️ جرّب:
-
-<code>cat evidence.txt</code>
-
-`,
-
-command:"cat evidence.txt",
-
-output:"User=analyst\nStatus=active\nIP=192.168.10.25",
-
-question:"ما الـ IP الموجود داخل الملف؟",
-
-answers:["192.168.10.25"]
-
-},
-
-{
-
-title:"اكتب معلومة",
-
-points:12,
-
-theory:`
-
-الأمر <code>echo</code> يستطيع طباعة نص.
-
-ويمكن استخدامه أيضًا مع <code>></code>
-
-لكتابة النص داخل ملف.
-
-مثال:
-
-<code>echo "test" > note.txt</code>
-
-<br><br>
-
-هذا مجرد تدريب على التعامل مع الملفات.
-
-`,
-
-command:'echo "SOC_START" > note.txt',
-
-output:"note.txt updated",
-
-question:"ما الكلمة التي كتبناها داخل الملف؟",
-
-answers:["soc_start","SOC_START"]
-
-},
-
-{
-
-title:"ابحث عن كلمة",
-
-points:18,
-
-theory:`
-
-الأمر <code>grep</code> مهم جدًا في تحليل الـ Logs.
-
-بدل أن تقرأ آلاف الأسطر،
-
-تستطيع البحث عن كلمة معينة.
-
-مثلاً:
-
-<code>grep "Failed" auth.log</code>
-
-يعرض الأسطر التي تحتوي على Failed.
-
-`,
-
-command:'grep "Failed" auth.log',
-
-output:"2026-09-17 18:42:11 Failed password for analyst from 192.168.10.50",
-
-question:"ما الكلمة التي نبحث عنها في المثال؟",
-
-answers:["failed"]
-
-}
-
-]
-
-},
-
-{
-
-title:"الغرفة 03 — اقرأ الـ Log",
-
-description:"هنا نبدأ الجزء الذي يهم محلل SOC: قراءة السجلات.",
-
-tasks:[
-
-{
-
-title:"ما هو الـ Log؟",
-
-points:10,
-
-theory:`
-
-الـ Log هو سجل للأحداث التي حدثت داخل النظام.
-
-قد يحتوي على:
-
-الوقت — المستخدم — الـ IP — نوع الحدث — النتيجة.
-
-كمحلل SOC، ستقرأ هذه المعلومات لتفهم ماذا حدث.
-
-<br><br>
-
-🖥️ الملف التدريبي:
-
-<code>/var/log/auth.log</code>
-
-`,
-
-command:"cat /var/log/auth.log",
-
-output:"2026-09-17 18:40:02 Accepted password for analyst from 192.168.10.25\n2026-09-17 18:41:33 Failed password for admin from 192.168.10.50\n2026-09-17 18:42:11 Failed password for admin from 192.168.10.50",
-
-question:"ما اسم الملف الذي نحلله؟",
-
-answers:["auth.log","/var/log/auth.log"]
-
-},
-
-{
-
-title:"حدد محاولة الدخول الفاشلة",
-
-points:15,
-
-theory:`
-
-لاحظي أن كلمة <code>Failed</code>
-
-تعني أن محاولة الدخول لم تنجح.
-
-بدل قراءة كل السجل،
-
-يمكن استخدام:
-
-<code>grep "Failed" /var/log/auth.log</code>
-
-لإظهار المحاولات الفاشلة فقط.
-
-`,
-
-command:'grep "Failed" /var/log/auth.log',
-
-output:"18:41:33 Failed password for admin from 192.168.10.50\n18:42:11 Failed password for admin from 192.168.10.50",
-
-question:"كم محاولة دخول فاشلة ظهرت؟",
-
-answers:["2","two"]
-
-},
-
-{
-
-title:"ما هو عنوان الـ IP؟",
-
-points:18,
-
-theory:`
-
-في الـ Log قد يظهر عنوان IP للمصدر.
-
-في هذا المختبر نستخدم IP ثابت وهمي:
-
-<code>192.168.10.50</code>
-
-حتى لا نستخدم أي بيانات حقيقية من أجهزة المتدربين.
-
-`,
-
-command:'grep "Failed" /var/log/auth.log',
-
-output:"Failed password for admin from 192.168.10.50\nFailed password for admin from 192.168.10.50",
-
-question:"ما عنوان الـ IP المرتبط بالمحاولات الفاشلة؟",
-
-answers:["192.168.10.50"]
-
-},
-
-{
-
-title:"آخر الأحداث",
-
-points:22,
-
-theory:`
-
-الأمر <code>tail</code> يعرض آخر أسطر من الملف.
-
-وهذا مفيد جدًا عندما يكون الـ Log كبيرًا
-
-ونريد مشاهدة أحدث الأحداث بسرعة.
-
-<br><br>
-
-🖥️ جرّبي:
-
-<code>tail -n 3 /var/log/auth.log</code>
-
-`,
-
-command:"tail -n 3 /var/log/auth.log",
-
-output:"18:40 Accepted password analyst\n18:41 Failed password admin 192.168.10.50\n18:42 Failed password admin 192.168.10.50",
-
-question:"أي أمر يعرض آخر 3 أسطر؟",
-
-answers:["tail -n 3 /var/log/auth.log","tail -n 3"]
-
-}
-
-]
-
-},
-
-{
-
-title:"الغرفة 04 — أنت الآن محلل SOC",
-
-description:"استخدم كل ما تعلمته لتحليل Incident صغير.",
-
-tasks:[
-
-{
-
-title:"ابحث عن كل Failed",
-
-points:15,
-
-theory:`
-
-الآن أنت تعرف أن <code>grep</code>
-
-يساعدنا في فلترة الـ Logs.
-
-لدينا Log يحتوي على أحداث كثيرة.
-
-مهمتك هي البحث عن جميع الأحداث التي تحتوي على:
-
-<code>Failed</code>
-
-`,
-
-command:'grep "Failed" security.log',
-
-output:"18:41 Failed login user=admin src=192.168.10.50\n18:42 Failed login user=admin src=192.168.10.50\n18:43 Failed login user=admin src=192.168.10.50",
-
-question:"كم Failed Login وجدنا؟",
-
-answers:["3","three"]
-
-},
-
-{
-
-title:"حدد الـ Source IP",
-
-points:20,
-
-theory:`
-
-في التحقيق الأمني نحتاج معرفة مصدر الحدث.
-
-في السطر:
-
-<code>src=192.168.10.50</code>
-
-كلمة <code>src</code> تعني Source.
-
-أي عنوان الـ IP الذي جاء منه الحدث.
-
-`,
-
-command:'grep "Failed" security.log',
-
-output:"18:41 Failed login user=admin src=192.168.10.50\n18:42 Failed login user=admin src=192.168.10.50\n18:43 Failed login user=admin src=192.168.10.50",
-
-question:"ما هو Source IP؟",
-
-answers:["192.168.10.50"]
-
-},
-
-{
-
-title:"من هو المستخدم المستهدف؟",
-
-points:20,
-
-theory:`
-
-لاحظي الجزء:
-
-<code>user=admin</code>
-
-هذا يخبرنا بالحساب الذي استهدفته محاولات الدخول.
-
-كمحلل SOC، نربط بين:
-
-User + Source IP + Time + Event
-
-حتى نفهم ما يحدث.
-
-`,
-
-command:'grep "Failed" security.log',
-
-output:"18:41 Failed login user=admin src=192.168.10.50\n18:42 Failed login user=admin src=192.168.10.50\n18:43 Failed login user=admin src=192.168.10.50",
-
-question:"ما اسم المستخدم المستهدف؟",
-
-answers:["admin"]
-
-},
-
-{
-
-title:"التحليل النهائي ⚡",
-
-points:30,
-
-theory:`
-
-ممتاز.
-
-الآن لديك:
-
-• 3 محاولات دخول فاشلة
-
-• المستخدم المستهدف: admin
-
-• المصدر: 192.168.10.50
-
-• المحاولات حدثت خلال فترة قصيرة.
-
-في SOC، لا نحتاج فقط أن نقرأ الـ Log،
-
-بل نربط المعلومات مع بعضها ونصف ما حدث.
-
-<br><br>
-
-🎯 السؤال الأخير:
-
-ما هو الـ IP الذي يجب أن نضعه في Incident Report كمصدر للمحاولات الفاشلة؟
-
-`,
-
-command:"grep \"Failed\" security.log",
-
-output:"FAILED LOGIN DETECTED\nuser=admin\nsrc=192.168.10.50\nattempts=3",
-
-question:"اكتب Source IP في الـ Incident Report.",
-
-answers:["192.168.10.50"]
-
-}
-
-]
-
-}
-
-];
-
-
-/* ============================================================
-   STATE
-============================================================ */
-
-let currentRoom = 0;
-
-let score = 0;
-
-let completedTasks = new Set();
-
-let userName = "";
-
-
-/* ============================================================
-   USER
-============================================================ */
-
-function saveUser(){
-
-    const input = document.getElementById("username");
-
-    const name = input.value.trim();
-
-    if(!name){
-
-        document.getElementById("userMessage").innerHTML =
-
-        '<span style="color:#ff5570">اكتب اسمك أولاً.</span>';
-
-        return;
-    }
-
-    userName = name;
-
-    localStorage.setItem("cyberBathUser",name);
-
-    document.getElementById("userMessage").innerHTML =
-
-    '<span style="color:#3cff7a">✓ تم حفظ الاسم</span>';
-
-    saveProgress();
-}
-
-
-function loadUser(){
-
-    const saved = localStorage.getItem("cyberBathUser");
-
-    if(saved){
-
-        userName = saved;
-
-        document.getElementById("username").value = saved;
-    }
-}
-
-
-/* ============================================================
-   ROOM
-============================================================ */
-
-function openRoom(index){
-
-    currentRoom = index;
-
-    document.getElementById("roomsSection").style.display="none";
-
-    document.querySelector(".hero").style.display="none";
-
-    document.querySelector(".user-panel").style.display="none";
-
-    document.querySelector(".progress-section").style.display="none";
-
-    document.getElementById("lab").classList.add("active");
-
-    renderRoom();
-
-    window.scrollTo({
-
-        top:0,
-
-        behavior:"smooth"
-    });
-}
-
-
-function closeLab(){
-
-    document.getElementById("lab").classList.remove("active");
-
-    document.getElementById("roomsSection").style.display="block";
-
-    document.querySelector(".hero").style.display="block";
-
-    document.querySelector(".user-panel").style.display="flex";
-
-    document.querySelector(".progress-section").style.display="block";
-
-    updateProgress();
-
-    window.scrollTo({
-
-        top:0,
-
-        behavior:"smooth"
-    });
-}
-
-
-function renderRoom(){
-
-    const room = rooms[currentRoom];
-
-    document.getElementById("labTitle").textContent = room.title;
-
-    document.getElementById("labDescription").textContent = room.description;
-
-    const tasksContainer = document.getElementById("tasks");
-
-    tasksContainer.innerHTML="";
-
-    room.tasks.forEach((task,index)=>{
-
-        const taskId = currentRoom+"-"+index;
-
-        const isDone = completedTasks.has(taskId);
-
-        const div = document.createElement("div");
-
-        div.className = "task " + (isDone ? "completed" : "");
-
-        div.innerHTML = `
-
-        <div class="task-head">
-
-            <span class="task-number">
-
-                TASK ${String(index+1).padStart(2,"0")}
-
-            </span>
-
-            <span class="task-points">
-
-                +${task.points} XP
-
-            </span>
-
-        </div>
-
-        <h3>${task.title}</h3>
-
-        <div class="theory">
-
-            <div class="theory-title">
-
-                💡 قبل ما تبدأ
-
-            </div>
-
-            ${task.theory}
-
-        </div>
-
-        <div class="terminal">
-
-            <div class="terminal-bar">
-
-                <span class="terminal-dot"></span>
-
-                <span class="terminal-dot"></span>
-
-                <span class="terminal-dot"></span>
-
-                <span class="terminal-title">
-
-                    ubuntu@cyberlab:~$
+                    +${task.points} XP
 
                 </span>
 
             </div>
 
-            <div class="terminal-body">
+            <h3>${task.title}</h3>
 
-                <span class="prompt">analyst@ubuntu:~$ </span>
+            <div class="theory">
 
-                <span class="command">${escapeHTML(task.command)}</span>
+                <div class="theory-title">
 
-                <br>
+                    💡 قبل ما تبدأ
 
-                ${escapeHTML(task.output)}
+                </div>
+
+                ${task.theory}
 
             </div>
 
-            <div class="command-box">
+            <div class="terminal">
 
-                <span>$</span>
+                <div class="terminal-bar">
+
+                    <span class="terminal-dot"></span>
+
+                    <span class="terminal-dot"></span>
+
+                    <span class="terminal-dot"></span>
+
+                    <span class="terminal-title">
+
+                        ubuntu@cyberlab:~$
+
+                    </span>
+
+                </div>
+
+                <div class="terminal-body">
+
+                    <span class="prompt">analyst@ubuntu:~$ </span>
+
+                    <span class="command">${escapeHTML(task.command)}</span>
+
+                    <br>
+
+                    ${escapeHTML(task.output)}
+
+                </div>
+
+                <div class="command-box">
+
+                    <span>$</span>
+
+                    <input
+
+                        id="cmd-${taskId}"
+
+                        placeholder="اكتب الأمر هنا..."
+
+                        autocomplete="off"
+
+                        onkeydown="handleCommand(event, '${taskId}', ${index})"
+
+                    >
+
+                </div>
+
+            </div>
+
+            <div class="question">
+
+                ❓ ${task.question}
+
+            </div>
+
+            <div class="answer-row">
 
                 <input
 
-                    id="cmd-${taskId}"
+                    id="answer-${taskId}"
 
-                    placeholder="اكتب الأمر هنا..."
+                    placeholder="اكتب إجابتك هنا..."
 
-                    autocomplete="off"
-
-                    onkeydown="handleCommand(event, '${taskId}', ${index})"
+                    ${isDone ? "disabled" : ""}
 
                 >
 
+                <button
+
+                    class="primary"
+
+                    onclick="checkAnswer(${index})"
+
+                    ${isDone ? "disabled" : ""}
+
+                >
+
+                    تحقق
+
+                </button>
+
             </div>
 
-        </div>
+            <div class="hint">
 
-        <div class="question">
+                💡 تلميح: اقرأ الـشرح فوق ثم جرّب الأمر المعروض في الـTerminal.
 
-            ❓ ${task.question}
+            </div>
 
-        </div>
+            <div class="feedback" id="feedback-${taskId}">
 
-        <div class="answer-row">
+                ${isDone ? '<span class="correct">✓ Task مكتملة</span>' : ""}
 
-            <input
+            </div>
 
-                id="answer-${taskId}"
+            `;
 
-                placeholder="اكتب إجابتك هنا..."
+                tasksContainer.appendChild(div);
 
-                ${isDone ? "disabled" : ""}
+            });
 
-            >
+            updateScore();
+        }
 
-            <button
 
-                class="primary"
+        /* ============================================================
+           TERMINAL
+        ============================================================ */
 
-                onclick="checkAnswer(${index})"
+        function handleCommand(event, taskId, index) {
 
-                ${isDone ? "disabled" : ""}
+            if (event.key !== "Enter") return;
 
-            >
+            const input = document.getElementById("cmd-" + taskId);
 
-                تحقق
+            const value = input.value.trim();
 
-            </button>
+            const task = rooms[currentRoom].tasks[index];
 
-        </div>
+            const terminal = input.closest(".terminal");
 
-        <div class="hint">
+            const body = terminal.querySelector(".terminal-body");
 
-            💡 تلميح: اقرأ الـشرح فوق ثم جرّب الأمر المعروض في الـTerminal.
+            body.innerHTML += `
 
-        </div>
+        <br>
 
-        <div class="feedback" id="feedback-${taskId}">
+        <span class="prompt">analyst@ubuntu:~$ </span>
 
-            ${isDone ? '<span class="correct">✓ Task مكتملة</span>' : ""}
+        <span class="command">${escapeHTML(value)}</span>
 
-        </div>
+        <br>
+
+        <span>${escapeHTML(getCommandResponse(value, task))}</span>
 
         `;
 
-        tasksContainer.appendChild(div);
-
-    });
-
-    updateScore();
-}
-
-
-/* ============================================================
-   TERMINAL
-============================================================ */
-
-function handleCommand(event,taskId,index){
-
-    if(event.key !== "Enter") return;
-
-    const input = document.getElementById("cmd-"+taskId);
-
-    const value = input.value.trim();
-
-    const task = rooms[currentRoom].tasks[index];
-
-    const terminal = input.closest(".terminal");
-
-    const body = terminal.querySelector(".terminal-body");
-
-    body.innerHTML += `
-
-    <br>
-
-    <span class="prompt">analyst@ubuntu:~$ </span>
-
-    <span class="command">${escapeHTML(value)}</span>
-
-    <br>
-
-    <span>${escapeHTML(getCommandResponse(value,task))}</span>
-
-    `;
-
-    input.value="";
-
-}
-
-
-function getCommandResponse(command,task){
-
-    const clean = command.trim().toLowerCase();
-
-    if(clean === task.command.toLowerCase()){
-
-        return task.output;
-    }
-
-    if(clean === "clear"){
-
-        return "Terminal cleared.";
-    }
-
-    if(clean === "help"){
-
-        return "Try the command shown in the task explanation.";
-    }
-
-    return "Command executed in training simulator. Try the command mentioned in the explanation.";
-}
-
-
-/* ============================================================
-   ANSWERS
-============================================================ */
-
-function checkAnswer(index){
-
-    const task = rooms[currentRoom].tasks[index];
-
-    const taskId = currentRoom+"-"+index;
-
-    if(completedTasks.has(taskId)) return;
-
-    const input = document.getElementById("answer-"+taskId);
-
-    const feedback = document.getElementById("feedback-"+taskId);
-
-    const answer = input.value.trim().toLowerCase();
-
-    const correct = task.answers.some(
-
-        x => x.toLowerCase() === answer
-
-    );
-
-    if(correct){
-
-        completedTasks.add(taskId);
-
-        score += task.points;
-
-        feedback.innerHTML =
-
-        `<span class="correct">
-
-            ✓ إجابة صحيحة! +${task.points} XP
-
-        </span>`;
-
-        input.disabled=true;
-
-        input.parentElement.querySelector("button").disabled=true;
-
-        input.parentElement.querySelector("button").style.opacity=".4";
-
-        const taskElement = input.closest(".task");
-
-        taskElement.classList.add("completed");
-
-        updateScore();
-
-        updateProgress();
-
-        saveProgress();
-
-        if(completedTasks.size === 16){
-
-            setTimeout(()=>{
-
-                alert(
-
-                "🎉 مبروك! أكملت مختبر SOC بالكامل!\\n\\n"+
-
-                "مجموع نقاطك: "+score+" XP"
-
-                );
-
-            },300);
+            input.value = "";
 
         }
 
-    }else{
 
-        feedback.innerHTML =
+        function getCommandResponse(command, task) {
 
-        `<span class="wrong">
+            const clean = command.trim().toLowerCase();
 
-            ✗ ليست الإجابة المطلوبة — ارجع للشرح وجرب مرة ثانية.
+            if (clean === task.command.toLowerCase()) {
 
-        </span>`;
-
-    }
-}
-
-
-/* ============================================================
-   SCORE
-============================================================ */
-
-function updateScore(){
-
-    document.getElementById("score").textContent = score+" XP";
-}
-
-
-function updateProgress(){
-
-    const total = 16;
-
-    const done = completedTasks.size;
-
-    const percent = (done/total)*100;
-
-    document.getElementById("progressText").textContent =
-
-    `${done} / ${total} مهمة`;
-
-    document.getElementById("progressFill").style.width = percent+"%";
-}
-
-
-/* ============================================================
-   FIREBASE SAVE
-============================================================ */
-
-async function saveProgress(){
-
-    if(!userName) return;
-
-    const data = {
-
-        name:userName,
-
-        score:score,
-
-        completedTasks:Array.from(completedTasks),
-
-        updatedAt:new Date().toISOString()
-    };
-
-    localStorage.setItem(
-
-        "cyberBathProgress",
-
-        JSON.stringify(data)
-
-    );
-
-    if(!window.firebaseReady) return;
-
-    try{
-
-        await setDoc(
-
-            doc(window.db,"students",userName),
-
-            data,
-
-            {merge:true}
-
-        );
-
-        console.log("Progress saved to Firebase.");
-
-    }catch(error){
-
-        console.log("Firebase save error:",error);
-    }
-}
-
-
-async function loadProgress(){
-
-    const local = localStorage.getItem("cyberBathProgress");
-
-    if(local){
-
-        try{
-
-            const data = JSON.parse(local);
-
-            if(data.name === userName){
-
-                score = data.score || 0;
-
-                completedTasks = new Set(
-
-                    data.completedTasks || []
-
-                );
+                return task.output;
             }
 
-        }catch(e){}
-    }
+            if (clean === "clear") {
 
-    if(!window.firebaseReady || !userName) return;
+                return "Terminal cleared.";
+            }
 
-    try{
+            if (clean === "help") {
 
-        const snap = await getDoc(
+                return "Try the command shown in the task explanation.";
+            }
 
-            doc(window.db,"students",userName)
+            return "Command executed in training simulator. Try the command mentioned in the explanation.";
+        }
 
-        );
 
-        if(snap.exists()){
+        /* ============================================================
+           ANSWERS
+        ============================================================ */
 
-            const data = snap.data();
+        function checkAnswer(index) {
 
-            score = data.score || score;
+            const task = rooms[currentRoom].tasks[index];
 
-            completedTasks = new Set(
+            const taskId = currentRoom + "-" + index;
 
-                data.completedTasks || Array.from(completedTasks)
+            if (completedTasks.has(taskId)) return;
+
+            const input = document.getElementById("answer-" + taskId);
+
+            const feedback = document.getElementById("feedback-" + taskId);
+
+            const answer = input.value.trim().toLowerCase();
+
+            const correct = task.answers.some(
+
+                x => x.toLowerCase() === answer
 
             );
+
+            if (correct) {
+
+                completedTasks.add(taskId);
+
+                score += task.points;
+
+                feedback.innerHTML =
+
+                    `<span class="correct">
+
+                ✓ إجابة صحيحة! +${task.points} XP
+
+            </span>`;
+
+                input.disabled = true;
+
+                input.parentElement.querySelector("button").disabled = true;
+
+                input.parentElement.querySelector("button").style.opacity = ".4";
+
+                const taskElement = input.closest(".task");
+
+                taskElement.classList.add("completed");
+
+                updateScore();
+
+                updateProgress();
+
+                saveProgress();
+
+                if (completedTasks.size === rooms.reduce((sum, room) => sum + room.tasks.length, 0)) {
+
+                    setTimeout(() => {
+
+                        alert(
+
+                            "🎉 مبروك! أكملت مختبر SOC بالكامل!\\n\\n" +
+
+                            "مجموع نقاطك: " + score + " XP"
+
+                        );
+
+                    }, 300);
+
+                }
+
+            } else {
+
+                feedback.innerHTML =
+
+                    `<span class="wrong">
+
+                ✗ ليست الإجابة المطلوبة — ارجع للشرح وجرب مرة ثانية.
+
+            </span>`;
+
+            }
+        }
+
+
+        /* ============================================================
+           SCORE
+        ============================================================ */
+
+        function updateScore() {
+
+            document.getElementById("score").textContent = score + " XP";
+        }
+
+
+        function updateProgress() {
+
+            const total = rooms.reduce((sum, room) => sum + room.tasks.length, 0);
+
+            const done = completedTasks.size;
+
+            const percent = (done / total) * 100;
+
+            document.getElementById("progressText").textContent =
+
+                `${done} / ${total} مهمة`;
+
+            document.getElementById("progressFill").style.width = percent + "%";
+        }
+
+
+        /* ============================================================
+           FIREBASE SAVE
+        ============================================================ */
+
+        async function saveProgress() {
+
+            if (!userName) return;
+
+            const data = {
+
+                name: userName,
+
+                score: score,
+
+                completedTasks: Array.from(completedTasks),
+
+                updatedAt: new Date().toISOString()
+            };
 
             localStorage.setItem(
 
                 "cyberBathProgress",
 
-                JSON.stringify({
-
-                    name:userName,
-
-                    score:score,
-
-                    completedTasks:Array.from(completedTasks)
-
-                })
+                JSON.stringify(data)
 
             );
+
+            if (!window.firebaseReady) return;
+
+            try {
+
+                await setDoc(
+
+                    doc(window.db, "students", userName),
+
+                    data,
+
+                    { merge: true }
+
+                );
+
+                console.log("Progress saved to Firebase.");
+
+            } catch (error) {
+
+                console.log("Firebase save error:", error);
+            }
+        }
+
+
+        async function loadProgress() {
+
+            const local = localStorage.getItem("cyberBathProgress");
+
+            if (local) {
+
+                try {
+
+                    const data = JSON.parse(local);
+
+                    if (data.name === userName) {
+
+                        score = data.score || 0;
+
+                        completedTasks = new Set(
+
+                            data.completedTasks || []
+
+                        );
+                    }
+
+                } catch (e) { }
+            }
+
+            if (!window.firebaseReady || !userName) return;
+
+            try {
+
+                const snap = await getDoc(
+
+                    doc(window.db, "students", userName)
+
+                );
+
+                if (snap.exists()) {
+
+                    const data = snap.data();
+
+                    score = data.score || score;
+
+                    completedTasks = new Set(
+
+                        data.completedTasks || Array.from(completedTasks)
+
+                    );
+
+                    localStorage.setItem(
+
+                        "cyberBathProgress",
+
+                        JSON.stringify({
+
+                            name: userName,
+
+                            score: score,
+
+                            completedTasks: Array.from(completedTasks)
+
+                        })
+
+                    );
+
+                    updateProgress();
+
+                    updateScore();
+                }
+
+            } catch (error) {
+
+                console.log("Firebase load error:", error);
+            }
+        }
+
+
+        /* ============================================================
+           FINAL QUIZ + LEADERBOARD
+        ============================================================ */
+
+        function showQuiz() {
+            if (!userName) {
+                alert("اكتبي اسمك أولاً.");
+                return;
+            }
+
+            if (completedTasks.size < rooms.reduce((sum, room) => sum + room.tasks.length, 0)) {
+                alert("أكملي الغرف الثلاث أولاً ثم افتحي الغرفة 04 — الكويز النهائي.");
+                return;
+            }
+
+            document.getElementById("roomsSection").style.display = "none";
+            document.querySelector(".hero").style.display = "none";
+            document.querySelector(".user-panel").style.display = "none";
+            document.querySelector(".progress-section").style.display = "none";
+            document.getElementById("lab").classList.remove("active");
+            document.getElementById("quizSection").classList.add("active");
+            document.getElementById("leaderboardSection").style.display = "none";
+
+            renderQuiz();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+
+            if (!quizSubmitted) {
+                quizStartedAt = Date.now();
+                startQuizTimer();
+            } else {
+                showSavedQuizResult();
+            }
+        }
+
+        function renderQuiz() {
+            const container = document.getElementById("quizQuestions");
+            container.innerHTML = "";
+
+            quizQuestions.forEach((item, index) => {
+                const div = document.createElement("div");
+                div.className = "quiz-question";
+                div.innerHTML = `
+                <h3>${index + 1}. ${item.q}</h3>
+                <div class="quiz-options">
+                    ${item.options.map((option, optIndex) => `
+                        <label class="quiz-option">
+                            <input type="radio" name="quiz-${index}" value="${optIndex}">
+                            <span>${option}</span>
+                        </label>
+                    `).join("")}
+                </div>
+            `;
+                container.appendChild(div);
+            });
+        }
+
+        function startQuizTimer() {
+            clearInterval(quizTimerInterval);
+            let remaining = 300;
+
+            const update = () => {
+                const elapsed = Math.floor((Date.now() - quizStartedAt) / 1000);
+                remaining = Math.max(0, 300 - elapsed);
+
+                const min = String(Math.floor(remaining / 60)).padStart(2, "0");
+                const sec = String(remaining % 60).padStart(2, "0");
+                document.getElementById("quizTimer").textContent = `${min}:${sec}`;
+
+                if (remaining <= 0) {
+                    clearInterval(quizTimerInterval);
+                    submitQuiz(true);
+                }
+            };
+
+            update();
+            quizTimerInterval = setInterval(update, 1000);
+        }
+
+        function submitQuiz(autoSubmit = false) {
+            if (quizSubmitted) return;
+
+            let correct = 0;
+
+            quizQuestions.forEach((item, index) => {
+                const selected = document.querySelector(`input[name="quiz-${index}"]:checked`);
+                if (selected && Number(selected.value) === item.answer) {
+                    correct++;
+                }
+            });
+
+            quizScore = correct * 10;
+            quizTimeSeconds = Math.min(
+                300,
+                Math.max(0, Math.floor((Date.now() - quizStartedAt) / 1000))
+            );
+
+            quizSubmitted = true;
+            clearInterval(quizTimerInterval);
+
+            saveProgress();
+            showQuizResult(correct, autoSubmit);
+            saveLeaderboard();
+        }
+
+        function showQuizResult(correct, autoSubmit = false) {
+            document.querySelectorAll("#quizQuestions input").forEach(input => input.disabled = true);
+            document.getElementById("submitQuizBtn").disabled = true;
+            document.getElementById("submitQuizBtn").style.opacity = ".4";
+
+            const totalScore = score + quizScore;
+            const minutes = String(Math.floor(quizTimeSeconds / 60)).padStart(2, "0");
+            const seconds = String(quizTimeSeconds % 60).padStart(2, "0");
+
+            const result = document.getElementById("quizResult");
+            result.style.display = "flex";
+            result.innerHTML = `
+            <div>
+                <strong>${autoSubmit ? "⏰ انتهى الوقت!" : "🎉 تم إنهاء الكويز!"}</strong>
+                <div style="color:var(--muted);margin-top:8px;">
+                    إجابات صحيحة: ${correct} / ${quizQuestions.length}
+                    <br>وقت الكويز: ${minutes}:${seconds}
+                </div>
+            </div>
+            <div class="score-number">${totalScore} XP</div>
+        `;
+        }
+
+        function showSavedQuizResult() {
+            document.getElementById("quizTimer").textContent = "00:00";
+            document.querySelectorAll("#quizQuestions input").forEach(input => input.disabled = true);
+            document.getElementById("submitQuizBtn").style.display = "none";
+
+            const totalScore = score + quizScore;
+            const minutes = String(Math.floor((quizTimeSeconds || 0) / 60)).padStart(2, "0");
+            const seconds = String((quizTimeSeconds || 0) % 60).padStart(2, "0");
+
+            const result = document.getElementById("quizResult");
+            result.style.display = "flex";
+            result.innerHTML = `
+            <div>
+                <strong>✓ نتيجتك محفوظة</strong>
+                <div style="color:var(--muted);margin-top:8px;">
+                    نقاط الكويز: ${quizScore} XP
+                    <br>وقت الكويز: ${minutes}:${seconds}
+                </div>
+            </div>
+            <div class="score-number">${totalScore} XP</div>
+        `;
+        }
+
+        async function saveLeaderboard() {
+            if (!userName || !window.firebaseReady) return;
+
+            try {
+                await setDoc(
+                    doc(window.db, "leaderboard", userName),
+                    {
+                        name: userName,
+                        roomScore: score,
+                        quizScore: quizScore,
+                        totalScore: score + quizScore,
+                        quizTimeSeconds: quizTimeSeconds,
+                        updatedAt: new Date().toISOString()
+                    },
+                    { merge: true }
+                );
+                loadLeaderboard();
+            } catch (error) {
+                console.log("Leaderboard save error:", error);
+            }
+        }
+
+        async function loadLeaderboard() {
+            const container = document.getElementById("leaderboardContent");
+
+            if (!window.firebaseReady) {
+                container.innerHTML = '<div class="leaderboard-empty">فعّلي Firebase/Firestore لعرض ترتيب المشاركين من جميع الأجهزة.</div>';
+                return;
+            }
+
+            try {
+                const snapshot = await getDocs(collection(window.db, "leaderboard"));
+                const rows = [];
+
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    if (data.name) {
+                        rows.push(data);
+                    }
+                });
+
+                rows.sort((a, b) => {
+                    const scoreDiff = (b.totalScore || 0) - (a.totalScore || 0);
+                    if (scoreDiff !== 0) return scoreDiff;
+
+                    const timeA = a.quizTimeSeconds ?? Infinity;
+                    const timeB = b.quizTimeSeconds ?? Infinity;
+                    return timeA - timeB;
+                });
+
+                if (!rows.length) {
+                    container.innerHTML = '<div class="leaderboard-empty">لا توجد نتائج حتى الآن.</div>';
+                    return;
+                }
+
+                container.innerHTML = `
+                <div style="overflow-x:auto;">
+                    <table class="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>المتدرب</th>
+                                <th>الغرف</th>
+                                <th>الكويز</th>
+                                <th>المجموع</th>
+                                <th>الوقت عند التعادل</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${rows.map((row, index) => {
+                    const t = row.quizTimeSeconds;
+                    const time = t == null ? "—" : `${String(Math.floor(t / 60)).padStart(2, "0")}:${String(t % 60).padStart(2, "0")}`;
+                    return `
+                                    <tr>
+                                        <td class="rank">${index + 1}</td>
+                                        <td>${escapeHTML(String(row.name))}</td>
+                                        <td>${row.roomScore || 0}</td>
+                                        <td>${row.quizScore || 0}</td>
+                                        <td><strong>${row.totalScore || 0}</strong></td>
+                                        <td>${time}</td>
+                                    </tr>
+                                `;
+                }).join("")}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            } catch (error) {
+                container.innerHTML = '<div class="leaderboard-empty">تعذر تحميل الترتيب. تأكدي من إعدادات Firestore.</div>';
+                console.log("Leaderboard load error:", error);
+            }
+        }
+
+        /* ============================================================
+           HELPERS
+        ============================================================ */
+
+        function escapeHTML(text) {
+
+            return text
+
+                .replaceAll("&", "&amp;")
+
+                .replaceAll("<", "&lt;")
+
+                .replaceAll(">", "&gt;")
+
+                .replaceAll('"', "&quot;")
+
+                .replaceAll("'", "&#039;");
+        }
+
+
+        function startFirstRoom() {
+
+            if (!userName) {
+
+                document.getElementById("username").focus();
+
+                document.getElementById("userMessage").innerHTML =
+
+                    '<span style="color:#ffc857">اكتب اسمك أولاً ثم ابدأ.</span>';
+
+                return;
+            }
+
+            openRoom(0);
+        }
+
+
+        function scrollToRooms() {
+
+            document.getElementById("roomsSection").scrollIntoView({
+
+                behavior: "smooth"
+            });
+        }
+
+
+        /* ============================================================
+           INIT
+        ============================================================ */
+
+        window.addEventListener("load", async () => {
+
+            loadUser();
 
             updateProgress();
 
             updateScore();
-        }
 
-    }catch(error){
+            if (userName) {
 
-        console.log("Firebase load error:",error);
-    }
-}
+                await loadProgress();
+            }
 
-
-/* ============================================================
-   HELPERS
-============================================================ */
-
-function escapeHTML(text){
-
-    return text
-
-        .replaceAll("&","&amp;")
-
-        .replaceAll("<","&lt;")
-
-        .replaceAll(">","&gt;")
-
-        .replaceAll('"',"&quot;")
-
-        .replaceAll("'","&#039;");
-}
-
-
-function startFirstRoom(){
-
-    if(!userName){
-
-        document.getElementById("username").focus();
-
-        document.getElementById("userMessage").innerHTML =
-
-        '<span style="color:#ffc857">اكتب اسمك أولاً ثم ابدأ.</span>';
-
-        return;
-    }
-
-    openRoom(0);
-}
-
-
-function scrollToRooms(){
-
-    document.getElementById("roomsSection").scrollIntoView({
-
-        behavior:"smooth"
-    });
-}
-
-
-/* ============================================================
-   INIT
-============================================================ */
-
-window.addEventListener("load",async()=>{
-
-    loadUser();
-
-    updateProgress();
-
-    updateScore();
-
-    if(userName){
-
-        await loadProgress();
-    }
-
-});
+        });
 
     </script>
 
