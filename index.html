@@ -493,6 +493,20 @@
             line-height: 1.8;
         }
 
+        .terminal-entry {
+            margin-top: 12px;
+        }
+
+        .terminal-output {
+            color: #d7e8ed;
+            white-space: normal;
+            line-height: 1.8;
+            margin-top: 4px;
+            direction: ltr;
+            text-align: left;
+        }
+
+
         .prompt {
             color: var(--green);
         }
@@ -1266,7 +1280,6 @@
             document.querySelector(".progress-section").style.display = "block";
 
             updateProgress();
-            loadLeaderboard();
 
             window.scrollTo({
 
@@ -1301,133 +1314,133 @@
 
                 div.innerHTML = `
 
-                        <div class="task-head">
+                            <div class="task-head">
 
-                            <span class="task-number">
+                                <span class="task-number">
 
-                                TASK ${String(index + 1).padStart(2, "0")}
+                                    TASK ${String(index + 1).padStart(2, "0")}
 
-                            </span>
+                                </span>
 
-                            <span class="task-points">
+                                <span class="task-points">
 
-                                +${task.points} XP
-
-                            </span>
-
-                        </div>
-
-                        <h3>${task.title}</h3>
-
-                        <div class="theory">
-
-                            <div class="theory-title">
-
-                                💡 قبل ما تبدأ
-
-                            </div>
-
-                            ${task.theory}
-
-                        </div>
-
-                        <div class="terminal">
-
-                            <div class="terminal-bar">
-
-                                <span class="terminal-dot"></span>
-
-                                <span class="terminal-dot"></span>
-
-                                <span class="terminal-dot"></span>
-
-                                <span class="terminal-title">
-
-                                    ubuntu@cyberlab:~$
+                                    +${task.points} XP
 
                                 </span>
 
                             </div>
 
-                            <div class="terminal-body">
+                            <h3>${task.title}</h3>
 
-                                <span class="prompt">analyst@ubuntu:~$ </span>
+                            <div class="theory">
 
-                                <span style="color:#688087;">اكتب أي أمر Linux لتجربته...</span>
+                                <div class="theory-title">
+
+                                    💡 قبل ما تبدأ
+
+                                </div>
+
+                                ${task.theory}
 
                             </div>
 
-                            <div class="command-box">
+                            <div class="terminal">
 
-                                <span>$</span>
+                                <div class="terminal-bar">
+
+                                    <span class="terminal-dot"></span>
+
+                                    <span class="terminal-dot"></span>
+
+                                    <span class="terminal-dot"></span>
+
+                                    <span class="terminal-title">
+
+                                        ubuntu@cyberlab:~$
+
+                                    </span>
+
+                                </div>
+
+                                <div class="terminal-body">
+
+                                    <span class="prompt">analyst@ubuntu:~$ </span>
+
+                                    <span style="color:#688087;">اكتب أي أمر Linux لتجربته...</span>
+
+                                </div>
+
+                                <div class="command-box">
+
+                                    <span>$</span>
+
+                                    <input
+
+                                        id="cmd-${taskId}"
+
+                                        placeholder="اكتب الأمر هنا..."
+
+                                        autocomplete="off"
+
+                                        onkeydown="handleCommand(event, '${taskId}', ${index})"
+
+                                    >
+
+                                </div>
+
+                            </div>
+
+                            <div class="question">
+
+                                ❓ ${task.question}
+
+                            </div>
+
+                            <div class="answer-row">
 
                                 <input
 
-                                    id="cmd-${taskId}"
+                                    id="answer-${taskId}"
 
-                                    placeholder="اكتب الأمر هنا..."
+                                    type="text"
 
                                     autocomplete="off"
 
-                                    onkeydown="handleCommand(event, '${taskId}', ${index})"
+                                    placeholder="اكتب إجابتك هنا..."
+
+                                    ${isDone ? "disabled" : ""}
 
                                 >
 
+                                <button
+
+                                    class="primary"
+
+                                    onclick="checkAnswer(${index})"
+
+                                    ${isDone ? "disabled" : ""}
+
+                                >
+
+                                    تحقق
+
+                                </button>
+
                             </div>
 
-                        </div>
+                            <div class="hint">
 
-                        <div class="question">
+                                💡 تلميح: اقرأ الـشرح فوق ثم جرّب الأمر المعروض في الـTerminal.
 
-                            ❓ ${task.question}
+                            </div>
 
-                        </div>
+                            <div class="feedback" id="feedback-${taskId}">
 
-                        <div class="answer-row">
+                                ${isDone ? '<span class="correct">✓ Task مكتملة</span>' : ""}
 
-                            <input
+                            </div>
 
-                                id="answer-${taskId}"
-
-                                type="text"
-
-                                autocomplete="off"
-
-                                placeholder="اكتب إجابتك هنا..."
-
-                                ${isDone ? "disabled" : ""}
-
-                            >
-
-                            <button
-
-                                class="primary"
-
-                                onclick="checkAnswer(${index})"
-
-                                ${isDone ? "disabled" : ""}
-
-                            >
-
-                                تحقق
-
-                            </button>
-
-                        </div>
-
-                        <div class="hint">
-
-                            💡 تلميح: اقرأ الـشرح فوق ثم جرّب الأمر المعروض في الـTerminal.
-
-                        </div>
-
-                        <div class="feedback" id="feedback-${taskId}">
-
-                            ${isDone ? '<span class="correct">✓ Task مكتملة</span>' : ""}
-
-                        </div>
-
-                        `;
+                            `;
 
                 tasksContainer.appendChild(div);
 
@@ -1441,16 +1454,52 @@
            TERMINAL
         ============================================================ */
 
-        function handleCommand(event, taskId, index) {
+        /* ============================================================
+           TERMINAL
+        ============================================================ */
 
+        /*
+         * The terminal is a SAFE simulator. It does not execute commands
+         * on the participant's real device. Every command produces a
+         * predefined training result.
+         */
+        const SIM_LOGS = [
+            "2026-09-17 18:40:02 Accepted password for analyst from 192.168.10.25",
+            "2026-09-17 18:41:33 Failed password for admin from 192.168.10.50",
+            "2026-09-17 18:42:11 Failed password for admin from 192.168.10.50",
+            "2026-09-17 18:43:07 Failed password for admin from 192.168.10.75",
+            "2026-09-17 18:44:19 Failed password for analyst from 10.0.0.15",
+            "2026-09-17 18:45:02 Accepted password for analyst from 192.168.10.25"
+        ];
+
+        const SIM_FILES = {
+            "evidence.txt": "User=analyst\nStatus=active\nIP=192.168.10.25",
+            "notes.txt": "SOC Training Notes\nStatus: active\nEnvironment: Ubuntu",
+            "/var/log/auth.log": SIM_LOGS.join("\n"),
+            "security.log": SIM_LOGS.filter(line => line.includes("Failed"))
+                .map(line => line.replace(/^.*? /, ""))
+                .join("\n")
+        };
+
+        function normalizeCommand(command) {
+            return command.trim().replace(/\s+/g, " ");
+        }
+
+        function escapeRegExp(value) {
+            return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        }
+
+        function handleCommand(event, taskId, index) {
             if (event.key !== "Enter") return;
 
             event.preventDefault();
+            event.stopPropagation();
 
             const input = document.getElementById("cmd-" + taskId);
-            const value = input ? input.value.trim() : "";
+            if (!input) return;
 
-            if (!input || !value) return;
+            const value = input.value.trim();
+            if (!value) return;
 
             const task = rooms[currentRoom].tasks[index];
             const terminal = input.closest(".terminal");
@@ -1460,124 +1509,173 @@
             if (response === "__CLEAR__") {
                 body.innerHTML = `<span class="prompt">analyst@ubuntu:~$ </span>`;
                 input.value = "";
+                input.focus();
                 return;
             }
 
+            const output = response || "Command completed successfully. No additional output.";
+
             body.innerHTML += `
-                        <br>
-                        <span class="prompt">analyst@ubuntu:~$ </span>
-                        <span class="command">${escapeHTML(value)}</span>
-                        <br>
-                        <span>${escapeHTML(response || "لا يوجد ناتج لهذا الأمر.")}</span>
-                    `;
+                    <div class="terminal-entry">
+                        <div><span class="prompt">analyst@ubuntu:~$ </span><span class="command">${escapeHTML(value)}</span></div>
+                        <div class="terminal-output">${escapeHTML(output).replace(/\n/g, "<br>")}</div>
+                    </div>
+                `;
 
             input.value = "";
 
-            // بعد تنفيذ الكوماند، انتقل مباشرة إلى خانة الإجابة
+            /*
+             * Keep the answer field usable after ANY command.
+             * We focus it only after the command is completed, but never
+             * disable it and never replace its value.
+             */
             const answerInput = document.getElementById("answer-" + taskId);
-
             if (answerInput && !answerInput.disabled) {
-                answerInput.removeAttribute("disabled");
-                answerInput.focus();
-
-                answerInput.scrollIntoView({
-                    behavior: "smooth",
-                    block: "center"
-                });
+                setTimeout(() => {
+                    answerInput.focus({ preventScroll: true });
+                }, 0);
             }
         }
-
 
         window.handleCommand = handleCommand;
 
         function getCommandResponse(command, task) {
+            const clean = normalizeCommand(command);
+            const lower = clean.toLowerCase();
 
-            const clean = command.trim().replace(/\s+/g, " ").toLowerCase();
+            /* Basic identity / navigation commands */
+            if (lower === "whoami") {
+                return "analyst";
+            }
 
-            /*
-             * Terminal simulator:
-             * كل أمر معروف له نتيجة مستقلة، وليس فقط أمر السؤال.
-             * مهم: نتيجة أمر السؤال لا تظهر مسبقًا؛ تظهر فقط بعد كتابة الأمر.
-             */
+            if (lower === "pwd") {
+                return "/home/analyst";
+            }
 
-            const commandOutputs = {
-                "whoami": "analyst",
+            if (lower === "ls") {
+                return "Documents  Downloads  logs  notes.txt  evidence.txt";
+            }
 
-                "pwd": "/home/analyst",
+            if (lower === "ls -l") {
+                return [
+                    "total 20",
+                    "drwxr-xr-x 2 analyst analyst 4096 Documents",
+                    "drwxr-xr-x 2 analyst analyst 4096 Downloads",
+                    "drwxr-xr-x 2 analyst analyst 4096 logs",
+                    "-rw-r--r-- 1 analyst analyst   42 notes.txt",
+                    "-rw-r--r-- 1 analyst analyst   45 evidence.txt"
+                ].join("\n");
+            }
 
-                "ls": "Documents  Downloads  logs  notes.txt",
+            if (lower === "cd logs" || lower === "cd /var/log") {
+                return "Changed directory successfully.\nCurrent directory: /home/analyst/logs";
+            }
 
-                "ls -l": "total 16\ndrwxr-xr-x 2 analyst analyst 4096 Documents\ndrwxr-xr-x 2 analyst analyst 4096 Downloads\ndrwxr-xr-x 2 analyst analyst 4096 logs\n-rw-r--r-- 1 analyst analyst   42 notes.txt",
+            if (lower === "cd ..") {
+                return "Changed directory successfully.\nCurrent directory: /home/analyst";
+            }
 
-                "cd logs": "",
+            if (lower === "cd ~" || lower === "cd /home/analyst") {
+                return "Changed directory successfully.\nCurrent directory: /home/analyst";
+            }
 
-                "cd /var/log": "",
+            if (lower === "date") {
+                return "Thu Sep 17 18:45:00 UTC 2026";
+            }
 
-                "cd ..": "",
+            if (lower === "hostname") {
+                return "cyberlab";
+            }
 
-                "cd ~": "",
+            if (lower === "uname") {
+                return "Linux";
+            }
 
-                "touch evidence.txt": "",
+            if (lower === "uname -a") {
+                return "Linux cyberlab 6.8.0-31-generic x86_64 GNU/Linux";
+            }
 
-                "cat evidence.txt": "User=analyst\nStatus=active\nIP=192.168.10.25",
+            if (lower === "help") {
+                return "Available commands: whoami, pwd, ls, cd, touch, mkdir, cat, grep, tail, from, date, hostname, uname, clear, help";
+            }
 
-                "cat notes.txt": "SOC Training Notes\nStatus: active\nEnvironment: Ubuntu",
+            /* File creation commands */
+            const touchMatch = clean.match(/^touch\s+(.+)$/i);
+            if (touchMatch) {
+                const fileName = touchMatch[1].trim();
+                return `File created successfully: ${fileName}\nType 'cat ${fileName}' to view its contents.`;
+            }
 
-                "cat /var/log/auth.log": "2026-09-17 18:40:02 Accepted password for analyst from 192.168.10.25\n2026-09-17 18:41:33 Failed password for admin from 192.168.10.50\n2026-09-17 18:42:11 Failed password for admin from 192.168.10.50",
+            const mkdirMatch = clean.match(/^mkdir(?:\s+-p)?\s+(.+)$/i);
+            if (mkdirMatch) {
+                const dirName = mkdirMatch[1].trim();
+                return `Directory created successfully: ${dirName}`;
+            }
 
-                'grep "Failed" /var/log/auth.log': "18:41:33 Failed password for admin from 192.168.10.50\n18:42:11 Failed password for admin from 192.168.10.50",
+            /* File reading */
+            const catMatch = clean.match(/^cat\s+(.+)$/i);
+            if (catMatch) {
+                let fileName = catMatch[1].trim();
+                fileName = fileName.replace(/^['"]|['"]$/g, "");
 
-                "grep failed /var/log/auth.log": "18:41:33 Failed password for admin from 192.168.10.50\n18:42:11 Failed password for admin from 192.168.10.50",
+                if (Object.prototype.hasOwnProperty.call(SIM_FILES, fileName)) {
+                    return SIM_FILES[fileName];
+                }
 
-                "tail -n 3 /var/log/auth.log": "18:40 Accepted password analyst\n18:41 Failed password admin 192.168.10.50\n18:42 Failed password admin 192.168.10.50",
+                const baseName = fileName.split("/").pop();
+                if (Object.prototype.hasOwnProperty.call(SIM_FILES, baseName)) {
+                    return SIM_FILES[baseName];
+                }
 
-                "tail -n 3 security.log": "Failed login - admin - Source IP: 192.168.10.50\nFailed login - admin - Source IP: 192.168.10.50\nFailed login - admin - Source IP: 192.168.10.50",
+                return `File information:\nName: ${baseName}\nStatus: available in the simulated training environment.`;
+            }
 
-                'grep "Failed" security.log': "Failed login - admin - Source IP: 192.168.10.50\nFailed login - admin - Source IP: 192.168.10.50\nFailed login - admin - Source IP: 192.168.10.50",
+            /* tail -n N FILE and tail FILE */
+            const tailMatch = clean.match(/^tail(?:\s+-n\s+(\d+))?\s+(.+)$/i);
+            if (tailMatch) {
+                const count = Number(tailMatch[1] || 10);
+                let fileName = tailMatch[2].trim().replace(/^['"]|['"]$/g, "");
+                const baseName = fileName.split("/").pop();
+                const content = SIM_FILES[fileName] || SIM_FILES[baseName] || SIM_LOGS.join("\n");
+                const lines = content.split("\n");
+                return lines.slice(-count).join("\n");
+            }
 
-                "grep failed security.log": "Failed login - admin - Source IP: 192.168.10.50\nFailed login - admin - Source IP: 192.168.10.50\nFailed login - admin - Source IP: 192.168.10.50",
-
-                "date": "Thu Sep 17 18:45:00 UTC 2026",
-
-                "hostname": "cyberlab",
-
-                "uname": "Linux",
-
-                "uname -a": "Linux cyberlab 6.8.0-31-generic x86_64 GNU/Linux",
-
-                "clear": "__CLEAR__",
-
-                "help": "Available commands: whoami, pwd, ls, cd, touch, cat, grep, tail, date, hostname, uname, clear, help"
-            };
-
-            const matchedCommandKey = Object.keys(commandOutputs).find(
-                key => key.toLowerCase() === clean
-            );
-
-            if (matchedCommandKey) {
-                return commandOutputs[matchedCommandKey];
+            /* grep "pattern" FILE */
+            const grepMatch = clean.match(/^grep\s+(?:-i\s+)?["']?([^"']+?)["']?\s+(.+)$/i);
+            if (grepMatch) {
+                const pattern = grepMatch[1].trim();
+                const fileName = grepMatch[2].trim().replace(/^['"]|['"]$/g, "");
+                const baseName = fileName.split("/").pop();
+                const content = SIM_FILES[fileName] || SIM_FILES[baseName] || SIM_LOGS.join("\n");
+                const regex = new RegExp(escapeRegExp(pattern), "i");
+                const matches = content.split("\n").filter(line => regex.test(line));
+                return matches.length ? matches.join("\n") : "No matching lines found.";
             }
 
             /*
-             * دعم بعض الصيغ الإضافية البسيطة حتى لا يكون التيرمنال محدودًا جدًا.
+             * SOC-friendly 'from IP' command. It searches the same simulated
+             * logs, so the learner can run tail first and then filter by IP.
              */
-            if (/^cd\s+/.test(clean)) {
-                return "";
+            const fromMatch = lower.match(/^from\s+(\d{1,3}(?:\.\d{1,3}){3})$/);
+            if (fromMatch) {
+                const ip = fromMatch[1];
+                const matches = SIM_LOGS.filter(line => line.includes(ip));
+                if (!matches.length) {
+                    return `No log entries found for source IP: ${ip}`;
+                }
+                return `Source IP: ${ip}\n${matches.join("\n")}`;
             }
 
-            if (/^cat\s+/.test(clean)) {
-                return "cat: الملف غير موجود في بيئة التدريب.";
+            if (lower === "clear") {
+                return "__CLEAR__";
             }
 
-            if (/^grep\s+/.test(clean)) {
-                return "grep: لم يتم العثور على نتائج مطابقة.";
-            }
-
-            if (/^tail(\s|$)/.test(clean)) {
-                return "tail: لا توجد بيانات لهذا الملف في بيئة التدريب.";
-            }
-
-            return `bash: ${command.trim()}: command not found`;
+            /*
+             * Never show 'command not found'. For unsupported input we still
+             * return a harmless simulated result so beginners can continue.
+             */
+            return `Simulated command executed successfully.\nCommand: ${clean}\nNo additional output.`;
         }
 
         /* ============================================================
@@ -1647,11 +1745,6 @@
 
             await saveProgress();
 
-            // تحديث المتصدرين مباشرة بعد كل إجابة صحيحة، وليس فقط بعد إنهاء الكويز.
-            if (correct) {
-                await saveLeaderboard();
-            }
-
             if (correct && completedTasks.size === rooms.reduce((sum, room) => sum + room.tasks.length, 0)) {
                 setTimeout(() => {
                     alert(
@@ -1698,7 +1791,7 @@
         async function getStudentFromSupabase() {
             if (!userName || !window.supabaseReady) return null;
             const { data, error } = await supabaseClient
-                .from("student")
+                .from("students")
                 .select("*")
                 .eq("name", userName)
                 .limit(1);
@@ -1738,13 +1831,13 @@
 
                 if (existing) {
                     const { error } = await supabaseClient
-                        .from("student")
+                        .from("students")
                         .update(data)
                         .eq("id", existing.id);
                     if (error) throw error;
                 } else {
                     const { error } = await supabaseClient
-                        .from("student")
+                        .from("students")
                         .insert(data);
                     if (error) throw error;
                 }
@@ -1853,16 +1946,16 @@
                 const div = document.createElement("div");
                 div.className = "quiz-question";
                 div.innerHTML = `
-                        <h3>${index + 1}. ${item.q}</h3>
-                        <div class="quiz-options">
-                            ${item.options.map((option, optIndex) => `
-                                <label class="quiz-option">
-                                    <input type="radio" name="quiz-${index}" value="${optIndex}" ${Number(quizAnswers[index]) === optIndex ? "checked" : ""}>
-                                    <span>${option}</span>
-                                </label>
-                            `).join("")}
-                        </div>
-                    `;
+                            <h3>${index + 1}. ${item.q}</h3>
+                            <div class="quiz-options">
+                                ${item.options.map((option, optIndex) => `
+                                    <label class="quiz-option">
+                                        <input type="radio" name="quiz-${index}" value="${optIndex}" ${Number(quizAnswers[index]) === optIndex ? "checked" : ""}>
+                                        <span>${option}</span>
+                                    </label>
+                                `).join("")}
+                            </div>
+                        `;
                 container.appendChild(div);
             });
 
@@ -1937,15 +2030,15 @@
             const result = document.getElementById("quizResult");
             result.style.display = "flex";
             result.innerHTML = `
-                        <div>
-                            <strong>${autoSubmit ? "⏰ انتهى الوقت!" : "🎉 تم إنهاء الكويز!"}</strong>
-                            <div style="color:var(--muted);margin-top:8px;">
-                                إجابات صحيحة: ${correct} / ${quizQuestions.length}
-                                <br>وقت الكويز: ${minutes}:${seconds}
+                            <div>
+                                <strong>${autoSubmit ? "⏰ انتهى الوقت!" : "🎉 تم إنهاء الكويز!"}</strong>
+                                <div style="color:var(--muted);margin-top:8px;">
+                                    إجابات صحيحة: ${correct} / ${quizQuestions.length}
+                                    <br>وقت الكويز: ${minutes}:${seconds}
+                                </div>
                             </div>
-                        </div>
-                        <div class="score-number">${totalScore} XP</div>
-                    `;
+                            <div class="score-number">${totalScore} XP</div>
+                        `;
         }
 
         function showSavedQuizResult() {
@@ -1960,43 +2053,26 @@
             const result = document.getElementById("quizResult");
             result.style.display = "flex";
             result.innerHTML = `
-                        <div>
-                            <strong>✓ نتيجتك محفوظة</strong>
-                            <div style="color:var(--muted);margin-top:8px;">
-                                نقاط الكويز: ${quizScore} XP
-                                <br>وقت الكويز: ${minutes}:${seconds}
+                            <div>
+                                <strong>✓ نتيجتك محفوظة</strong>
+                                <div style="color:var(--muted);margin-top:8px;">
+                                    نقاط الكويز: ${quizScore} XP
+                                    <br>وقت الكويز: ${minutes}:${seconds}
+                                </div>
                             </div>
-                        </div>
-                        <div class="score-number">${totalScore} XP</div>
-                    `;
-        }
-
-        function getRoomScores() {
-            const roomScores = rooms.map((room, roomIndex) => {
-                return room.tasks.reduce((sum, task, taskIndex) => {
-                    const taskId = roomIndex + "-" + taskIndex;
-                    return sum + (completedTasks.has(taskId) ? task.points : 0);
-                }, 0);
-            });
-
-            return {
-                room1: roomScores[0] || 0,
-                room2: roomScores[1] || 0,
-                room3: roomScores[2] || 0
-            };
+                            <div class="score-number">${totalScore} XP</div>
+                        `;
         }
 
         async function saveLeaderboard() {
             if (!userName || !window.supabaseReady) return;
 
-            const roomScores = getRoomScores();
-
             const data = {
                 name: userName,
                 room_score: score,
-                quiz_score: quizScore || 0,
-                total_score: score + (quizScore || 0),
-                quiz_time_seconds: quizSubmitted ? quizTimeSeconds : null,
+                quiz_score: quizScore,
+                total_score: score + quizScore,
+                quiz_time_seconds: quizTimeSeconds,
                 updated_at: new Date().toISOString()
             };
 
@@ -2037,113 +2113,56 @@
             }
 
             try {
-                // نقرأ التقدم من student حتى يظهر المتدرب بمجرد حل أي مهمة،
-                // ونقرأ نتيجة الكويز من leaderboard عند وجودها.
-                const [studentsResult, leaderboardResult] = await Promise.all([
-                    supabaseClient
-                        .from("student")
-                        .select("name,score,completed_tasks,answers,updated_at"),
-                    supabaseClient
-                        .from("leaderboard")
-                        .select("name,room_score,quiz_score,total_score,quiz_time_seconds,updated_at")
-                ]);
+                const { data: rows, error } = await supabaseClient
+                    .from("leaderboard")
+                    .select("name,room_score,quiz_score,total_score,quiz_time_seconds")
+                    .order("total_score", { ascending: false });
 
-                if (studentsResult.error) throw studentsResult.error;
-                if (leaderboardResult.error) throw leaderboardResult.error;
+                if (error) throw error;
 
-                const students = studentsResult.data || [];
-                const leaderboardRows = leaderboardResult.data || [];
-                const quizByName = new Map(leaderboardRows.map(row => [row.name, row]));
-
-                const rows = students.map(student => {
-                    const completed = new Set(student.completed_tasks || []);
-                    const roomScores = rooms.map((room, roomIndex) => {
-                        return room.tasks.reduce((sum, task, taskIndex) => {
-                            const taskId = roomIndex + "-" + taskIndex;
-                            return sum + (completed.has(taskId) ? task.points : 0);
-                        }, 0);
-                    });
-
-                    const quiz = quizByName.get(student.name) || {};
-                    const roomScore = roomScores.reduce((a, b) => a + b, 0);
-                    const quizScoreValue = quiz.quiz_score || 0;
-                    const totalScore = roomScore + quizScoreValue;
-
-                    return {
-                        name: student.name,
-                        room1: roomScores[0] || 0,
-                        room2: roomScores[1] || 0,
-                        room3: roomScores[2] || 0,
-                        roomScore,
-                        quizScore: quizScoreValue,
-                        totalScore,
-                        quizTimeSeconds: quiz.quiz_time_seconds ?? null
-                    };
-                });
-
-                // إذا كان هناك صف في leaderboard ولم يوجد له صف student لأي سبب، لا نخفيه.
-                leaderboardRows.forEach(row => {
-                    if (!rows.some(item => item.name === row.name)) {
-                        rows.push({
-                            name: row.name,
-                            room1: 0,
-                            room2: 0,
-                            room3: 0,
-                            roomScore: row.room_score || 0,
-                            quizScore: row.quiz_score || 0,
-                            totalScore: row.total_score || 0,
-                            quizTimeSeconds: row.quiz_time_seconds ?? null
-                        });
-                    }
-                });
-
-                rows.sort((a, b) => {
-                    const scoreDiff = (b.totalScore || 0) - (a.totalScore || 0);
+                const sortedRows = [...(rows || [])].sort((a, b) => {
+                    const scoreDiff = (b.total_score || 0) - (a.total_score || 0);
                     if (scoreDiff !== 0) return scoreDiff;
-                    return (a.quizTimeSeconds ?? Infinity) - (b.quizTimeSeconds ?? Infinity);
+                    return (a.quiz_time_seconds ?? Infinity) - (b.quiz_time_seconds ?? Infinity);
                 });
 
-                if (!rows.length) {
+                if (!sortedRows.length) {
                     container.innerHTML = '<div class="leaderboard-empty">لا توجد نتائج حتى الآن.</div>';
                     return;
                 }
 
                 container.innerHTML = `
-                        <div style="overflow-x:auto;">
-                            <table class="leaderboard-table">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>المتدرب</th>
-                                        <th>الغرفة 01</th>
-                                        <th>الغرفة 02</th>
-                                        <th>الغرفة 03</th>
-                                        <th>الكويز</th>
-                                        <th>المجموع</th>
-                                        <th>وقت الكويز</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${rows.map((row, index) => {
-                    const t = row.quizTimeSeconds;
+                            <div style="overflow-x:auto;">
+                                <table class="leaderboard-table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>المتدرب</th>
+                                            <th>الغرف</th>
+                                            <th>الكويز</th>
+                                            <th>المجموع</th>
+                                            <th>الوقت</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${sortedRows.map((row, index) => {
+                    const t = row.quiz_time_seconds;
                     const time = t == null ? "—" : `${String(Math.floor(t / 60)).padStart(2, "0")}:${String(t % 60).padStart(2, "0")}`;
                     return `
-                                            <tr>
-                                                <td class="rank">${index + 1}</td>
-                                                <td>${escapeHTML(String(row.name || ""))}</td>
-                                                <td>${row.room1}</td>
-                                                <td>${row.room2}</td>
-                                                <td>${row.room3}</td>
-                                                <td>${row.quizScore}</td>
-                                                <td><strong>${row.totalScore}</strong></td>
-                                                <td>${time}</td>
-                                            </tr>
-                                        `;
+                                                <tr>
+                                                    <td class="rank">${index + 1}</td>
+                                                    <td>${escapeHTML(String(row.name || ""))}</td>
+                                                    <td>${row.room_score || 0}</td>
+                                                    <td>${row.quiz_score || 0}</td>
+                                                    <td><strong>${row.total_score || 0}</strong></td>
+                                                    <td>${time}</td>
+                                                </tr>
+                                            `;
                 }).join("")}
-                                </tbody>
-                            </table>
-                        </div>
-                    `;
+                                    </tbody>
+                                </table>
+                            </div>
+                        `;
             } catch (error) {
                 container.innerHTML = '<div class="leaderboard-empty">تعذر تحميل الترتيب. تأكدي من صلاحيات Supabase (RLS).</div>';
                 console.error("Leaderboard load error:", error);
@@ -2232,4 +2251,4 @@
     </script>
 
 </body>
-</html>l>
+</html>
