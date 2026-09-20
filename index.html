@@ -1183,35 +1183,51 @@
            USER
         ============================================================ */
 
-        function saveUser() {
-
+        async function saveUser() {
             const input = document.getElementById("username");
-
             const name = input.value.trim();
 
             if (!name) {
-
                 document.getElementById("userMessage").innerHTML =
-
                     '<span style="color:#ff5570">اكتب اسمك أولاً.</span>';
-
                 return;
             }
 
             userName = name;
+
             if (!challengeStartedAt) {
                 challengeStartedAt = Date.now();
             }
 
             localStorage.setItem("cyberBathUser", name);
 
-            document.getElementById("userMessage").innerHTML =
+            const message = document.getElementById("userMessage");
+            message.innerHTML =
+                '<span style="color:#ffc857">⏳ جاري حفظ الاسم...</span>';
 
-                '<span style="color:#3cff7a">✓ تم حفظ الاسم</span>';
+            try {
+                // 1) احفظ/أنشئ الطالب فوراً في جدول student
+                await ensureStudentExists();
 
-            saveProgress();
+                // 2) أظهر الاسم مباشرة في المتصدرين حتى قبل حل أي غرفة
+                await saveLeaderboard();
+
+                // 3) احفظ نسخة التقدم المحلية
+                saveLocalProgress();
+
+                message.innerHTML =
+                    '<span style="color:#3cff7a">✓ تم حفظ الاسم بنجاح</span>';
+
+                await loadProgress();
+                await loadLeaderboard();
+            } catch (error) {
+                console.error("saveUser error:", error);
+
+                // الاسم محفوظ محلياً حتى لو كانت RLS/قاعدة البيانات تمنع الحفظ
+                message.innerHTML =
+                    '<span style="color:#ff5570">✗ لم يتم الحفظ في قاعدة البيانات. افتحي Console لمعرفة الخطأ.</span>';
+            }
         }
-
 
         function loadUser() {
 
@@ -1314,133 +1330,133 @@
 
                 div.innerHTML = `
 
-                            <div class="task-head">
+                                <div class="task-head">
 
-                                <span class="task-number">
+                                    <span class="task-number">
 
-                                    TASK ${String(index + 1).padStart(2, "0")}
+                                        TASK ${String(index + 1).padStart(2, "0")}
 
-                                </span>
+                                    </span>
 
-                                <span class="task-points">
+                                    <span class="task-points">
 
-                                    +${task.points} XP
-
-                                </span>
-
-                            </div>
-
-                            <h3>${task.title}</h3>
-
-                            <div class="theory">
-
-                                <div class="theory-title">
-
-                                    💡 قبل ما تبدأ
-
-                                </div>
-
-                                ${task.theory}
-
-                            </div>
-
-                            <div class="terminal">
-
-                                <div class="terminal-bar">
-
-                                    <span class="terminal-dot"></span>
-
-                                    <span class="terminal-dot"></span>
-
-                                    <span class="terminal-dot"></span>
-
-                                    <span class="terminal-title">
-
-                                        ubuntu@cyberlab:~$
+                                        +${task.points} XP
 
                                     </span>
 
                                 </div>
 
-                                <div class="terminal-body">
+                                <h3>${task.title}</h3>
 
-                                    <span class="prompt">analyst@ubuntu:~$ </span>
+                                <div class="theory">
 
-                                    <span style="color:#688087;">اكتب أي أمر Linux لتجربته...</span>
+                                    <div class="theory-title">
+
+                                        💡 قبل ما تبدأ
+
+                                    </div>
+
+                                    ${task.theory}
 
                                 </div>
 
-                                <div class="command-box">
+                                <div class="terminal">
 
-                                    <span>$</span>
+                                    <div class="terminal-bar">
+
+                                        <span class="terminal-dot"></span>
+
+                                        <span class="terminal-dot"></span>
+
+                                        <span class="terminal-dot"></span>
+
+                                        <span class="terminal-title">
+
+                                            ubuntu@cyberlab:~$
+
+                                        </span>
+
+                                    </div>
+
+                                    <div class="terminal-body">
+
+                                        <span class="prompt">analyst@ubuntu:~$ </span>
+
+                                        <span style="color:#688087;">اكتب أي أمر Linux لتجربته...</span>
+
+                                    </div>
+
+                                    <div class="command-box">
+
+                                        <span>$</span>
+
+                                        <input
+
+                                            id="cmd-${taskId}"
+
+                                            placeholder="اكتب الأمر هنا..."
+
+                                            autocomplete="off"
+
+                                            onkeydown="handleCommand(event, '${taskId}', ${index})"
+
+                                        >
+
+                                    </div>
+
+                                </div>
+
+                                <div class="question">
+
+                                    ❓ ${task.question}
+
+                                </div>
+
+                                <div class="answer-row">
 
                                     <input
 
-                                        id="cmd-${taskId}"
+                                        id="answer-${taskId}"
 
-                                        placeholder="اكتب الأمر هنا..."
+                                        type="text"
 
                                         autocomplete="off"
 
-                                        onkeydown="handleCommand(event, '${taskId}', ${index})"
+                                        placeholder="اكتب إجابتك هنا..."
+
+                                        ${isDone ? "disabled" : ""}
 
                                     >
 
+                                    <button
+
+                                        class="primary"
+
+                                        onclick="checkAnswer(${index})"
+
+                                        ${isDone ? "disabled" : ""}
+
+                                    >
+
+                                        تحقق
+
+                                    </button>
+
                                 </div>
 
-                            </div>
+                                <div class="hint">
 
-                            <div class="question">
+                                    💡 تلميح: اقرأ الـشرح فوق ثم جرّب الأمر المعروض في الـTerminal.
 
-                                ❓ ${task.question}
+                                </div>
 
-                            </div>
+                                <div class="feedback" id="feedback-${taskId}">
 
-                            <div class="answer-row">
+                                    ${isDone ? '<span class="correct">✓ Task مكتملة</span>' : ""}
 
-                                <input
+                                </div>
 
-                                    id="answer-${taskId}"
-
-                                    type="text"
-
-                                    autocomplete="off"
-
-                                    placeholder="اكتب إجابتك هنا..."
-
-                                    ${isDone ? "disabled" : ""}
-
-                                >
-
-                                <button
-
-                                    class="primary"
-
-                                    onclick="checkAnswer(${index})"
-
-                                    ${isDone ? "disabled" : ""}
-
-                                >
-
-                                    تحقق
-
-                                </button>
-
-                            </div>
-
-                            <div class="hint">
-
-                                💡 تلميح: اقرأ الـشرح فوق ثم جرّب الأمر المعروض في الـTerminal.
-
-                            </div>
-
-                            <div class="feedback" id="feedback-${taskId}">
-
-                                ${isDone ? '<span class="correct">✓ Task مكتملة</span>' : ""}
-
-                            </div>
-
-                            `;
+                                `;
 
                 tasksContainer.appendChild(div);
 
@@ -1516,11 +1532,11 @@
             const output = response || "Command completed successfully. No additional output.";
 
             body.innerHTML += `
-                    <div class="terminal-entry">
-                        <div><span class="prompt">analyst@ubuntu:~$ </span><span class="command">${escapeHTML(value)}</span></div>
-                        <div class="terminal-output">${escapeHTML(output).replace(/\n/g, "<br>")}</div>
-                    </div>
-                `;
+                        <div class="terminal-entry">
+                            <div><span class="prompt">analyst@ubuntu:~$ </span><span class="command">${escapeHTML(value)}</span></div>
+                            <div class="terminal-output">${escapeHTML(output).replace(/\n/g, "<br>")}</div>
+                        </div>
+                    `;
 
             input.value = "";
 
@@ -1702,50 +1718,90 @@
         });
 
 
+        function normalizeAnswer(value) {
+            return String(value ?? "")
+                .trim()
+                .toLowerCase()
+                .replace(/[“”‘’]/g, '"')
+                .replace(/\s+/g, " ")
+                .replace(/\s*\/\s*/g, "/");
+        }
+
         async function checkAnswer(index) {
-            const task = rooms[currentRoom].tasks[index];
+            const room = rooms[currentRoom];
+            const task = room && room.tasks[index];
+
+            if (!task) return;
+
             const taskId = currentRoom + "-" + index;
+
             if (completedTasks.has(taskId)) return;
 
             const input = document.getElementById("answer-" + taskId);
             const feedback = document.getElementById("feedback-" + taskId);
-            if (!input) return;
 
-            const answer = input.value.trim().toLowerCase();
-            if (!answer) {
-                feedback.innerHTML = '<span class="wrong">✗ اكتب إجابتك أولاً.</span>';
+            if (!input || !feedback) return;
+
+            const rawAnswer = input.value.trim();
+
+            if (!rawAnswer) {
+                feedback.innerHTML =
+                    '<span class="wrong">✗ اكتب إجابتك أولاً.</span>';
+                input.focus();
                 return;
             }
 
-            const correct = task.answers.some(x => x.toLowerCase() === answer);
+            const answer = normalizeAnswer(rawAnswer);
+            const correct = task.answers.some(
+                x => normalizeAnswer(x) === answer
+            );
 
-            // نحفظ آخر إجابة للمهمة حتى لو كانت خاطئة.
             answers[taskId] = {
-                answer: input.value.trim(),
+                answer: rawAnswer,
                 correct,
                 submittedAt: new Date().toISOString()
             };
 
             if (correct) {
                 completedTasks.add(taskId);
-                score += task.points;
+                score += Number(task.points) || 0;
 
-                feedback.innerHTML = `<span class="correct">✓ إجابة صحيحة! +${task.points} XP</span>`;
+                feedback.innerHTML =
+                    `<span class="correct">✓ إجابة صحيحة! +${task.points} XP</span>`;
+
                 input.disabled = true;
-                input.parentElement.querySelector("button").disabled = true;
-                input.parentElement.querySelector("button").style.opacity = ".4";
+
+                const button = input.parentElement.querySelector("button");
+                if (button) {
+                    button.disabled = true;
+                    button.style.opacity = ".4";
+                }
+
                 const taskElement = input.closest(".task");
-                taskElement.classList.add("completed");
+                if (taskElement) taskElement.classList.add("completed");
 
                 updateScore();
                 updateProgress();
+
+                // احفظ المهمة الصحيحة فوراً في student
+                await saveProgress();
+
+                // والأهم: حدّث المتصدرين فوراً بعد حل أي مهمة
+                await saveLeaderboard();
+                await loadLeaderboard();
             } else {
-                feedback.innerHTML = '<span class="wrong">✗ ليست الإجابة المطلوبة — ارجع للشرح وجرب مرة ثانية.</span>';
+                feedback.innerHTML =
+                    '<span class="wrong">✗ ليست الإجابة المطلوبة — ارجع للشرح وجرب مرة ثانية.</span>';
+
+                // نحفظ الإجابة الخاطئة أيضاً
+                await saveProgress();
             }
 
-            await saveProgress();
-
-            if (correct && completedTasks.size === rooms.reduce((sum, room) => sum + room.tasks.length, 0)) {
+            if (
+                correct &&
+                completedTasks.size ===
+                rooms.reduce((sum, room) => sum + room.tasks.length, 0)
+            ) {
                 setTimeout(() => {
                     alert(
                         "🎉 مبروك! أكملت مختبر SOC بالكامل!\n\n" +
@@ -1788,10 +1844,24 @@
            SUPABASE SAVE / LOAD
         ============================================================ */
 
+        function saveLocalProgress() {
+            localStorage.setItem("cyberBathProgress", JSON.stringify({
+                name: userName,
+                score,
+                completedTasks: Array.from(completedTasks),
+                answers,
+                quizScore,
+                quizTimeSeconds,
+                quizAnswers,
+                quizSubmitted
+            }));
+        }
+
         async function getStudentFromSupabase() {
             if (!userName || !window.supabaseReady) return null;
+
             const { data, error } = await supabaseClient
-                .from("students")
+                .from("student")
                 .select("*")
                 .eq("name", userName)
                 .limit(1);
@@ -1800,8 +1870,40 @@
             return data && data.length ? data[0] : null;
         }
 
+        async function ensureStudentExists() {
+            if (!userName || !window.supabaseReady) return null;
+
+            const existing = await getStudentFromSupabase();
+
+            if (existing) return existing;
+
+            const newStudent = {
+                name: userName,
+                score: 0,
+                completed_tasks: [],
+                answers: {},
+                quiz_score: 0,
+                quiz_time_seconds: 0,
+                updated_at: new Date().toISOString()
+            };
+
+            const { data, error } = await supabaseClient
+                .from("student")
+                .insert(newStudent)
+                .select("*")
+                .single();
+
+            if (error) throw error;
+            return data;
+        }
+
         async function saveProgress() {
             if (!userName) return;
+
+            // احفظ على الجهاز دائماً
+            saveLocalProgress();
+
+            if (!window.supabaseReady) return;
 
             const data = {
                 name: userName,
@@ -1813,57 +1915,50 @@
                 updated_at: new Date().toISOString()
             };
 
-            localStorage.setItem("cyberBathProgress", JSON.stringify({
-                name: userName,
-                score,
-                completedTasks: Array.from(completedTasks),
-                answers,
-                quizScore,
-                quizTimeSeconds,
-                quizAnswers,
-                quizSubmitted
-            }));
-
-            if (!window.supabaseReady) return;
-
             try {
                 const existing = await getStudentFromSupabase();
 
                 if (existing) {
                     const { error } = await supabaseClient
-                        .from("students")
+                        .from("student")
                         .update(data)
                         .eq("id", existing.id);
+
                     if (error) throw error;
                 } else {
                     const { error } = await supabaseClient
-                        .from("students")
+                        .from("student")
                         .insert(data);
+
                     if (error) throw error;
                 }
 
-                console.log("Progress saved to Supabase.");
+                console.log("Progress saved to Supabase.student");
             } catch (error) {
-                console.error("Supabase save error:", error);
+                console.error("Supabase student save error:", error);
             }
         }
 
         async function loadProgress() {
-            // تحميل نسخة الجهاز أولاً كنسخة احتياطية.
+            // نسخة الجهاز أولاً
             const local = localStorage.getItem("cyberBathProgress");
+
             if (local) {
                 try {
                     const data = JSON.parse(local);
+
                     if (data.name === userName) {
-                        score = data.score || 0;
+                        score = Number(data.score) || 0;
                         completedTasks = new Set(data.completedTasks || []);
                         answers = data.answers || {};
-                        quizScore = data.quizScore || 0;
+                        quizScore = Number(data.quizScore) || 0;
                         quizTimeSeconds = data.quizTimeSeconds ?? null;
                         quizAnswers = data.quizAnswers || {};
                         quizSubmitted = !!data.quizSubmitted;
                     }
-                } catch (e) { }
+                } catch (e) {
+                    console.error("Local progress load error:", e);
+                }
             }
 
             if (!window.supabaseReady || !userName) {
@@ -1876,34 +1971,28 @@
                 const data = await getStudentFromSupabase();
 
                 if (data) {
-                    score = data.score || 0;
+                    score = Number(data.score) || 0;
                     completedTasks = new Set(data.completed_tasks || []);
                     answers = data.answers || {};
-                    quizScore = data.quiz_score || 0;
+                    quizScore = Number(data.quiz_score) || 0;
                     quizTimeSeconds = data.quiz_time_seconds ?? null;
 
-                    // quiz answers محفوظة داخل answers تحت المفتاح quiz.
                     quizAnswers = answers.quiz || {};
-                    quizSubmitted = Object.keys(quizAnswers).length > 0 || quizScore > 0 || quizTimeSeconds !== null && quizTimeSeconds > 0;
+                    quizSubmitted =
+                        Object.keys(quizAnswers).length > 0 ||
+                        quizScore > 0 ||
+                        (quizTimeSeconds !== null && Number(quizTimeSeconds) > 0);
 
-                    localStorage.setItem("cyberBathProgress", JSON.stringify({
-                        name: userName,
-                        score,
-                        completedTasks: Array.from(completedTasks),
-                        answers,
-                        quizScore,
-                        quizTimeSeconds,
-                        quizAnswers,
-                        quizSubmitted
-                    }));
+                    saveLocalProgress();
 
                     updateProgress();
                     updateScore();
                 }
             } catch (error) {
-                console.error("Supabase load error:", error);
+                console.error("Supabase student load error:", error);
             }
         }
+
         /* ============================================================
            FINAL QUIZ + LEADERBOARD
         ============================================================ */
@@ -1946,16 +2035,16 @@
                 const div = document.createElement("div");
                 div.className = "quiz-question";
                 div.innerHTML = `
-                            <h3>${index + 1}. ${item.q}</h3>
-                            <div class="quiz-options">
-                                ${item.options.map((option, optIndex) => `
-                                    <label class="quiz-option">
-                                        <input type="radio" name="quiz-${index}" value="${optIndex}" ${Number(quizAnswers[index]) === optIndex ? "checked" : ""}>
-                                        <span>${option}</span>
-                                    </label>
-                                `).join("")}
-                            </div>
-                        `;
+                                <h3>${index + 1}. ${item.q}</h3>
+                                <div class="quiz-options">
+                                    ${item.options.map((option, optIndex) => `
+                                        <label class="quiz-option">
+                                            <input type="radio" name="quiz-${index}" value="${optIndex}" ${Number(quizAnswers[index]) === optIndex ? "checked" : ""}>
+                                            <span>${option}</span>
+                                        </label>
+                                    `).join("")}
+                                </div>
+                            `;
                 container.appendChild(div);
             });
 
@@ -2015,6 +2104,7 @@
 
             await saveProgress();
             await saveLeaderboard();
+            await loadLeaderboard();
             showQuizResult(correct, autoSubmit);
         }
 
@@ -2030,15 +2120,15 @@
             const result = document.getElementById("quizResult");
             result.style.display = "flex";
             result.innerHTML = `
-                            <div>
-                                <strong>${autoSubmit ? "⏰ انتهى الوقت!" : "🎉 تم إنهاء الكويز!"}</strong>
-                                <div style="color:var(--muted);margin-top:8px;">
-                                    إجابات صحيحة: ${correct} / ${quizQuestions.length}
-                                    <br>وقت الكويز: ${minutes}:${seconds}
+                                <div>
+                                    <strong>${autoSubmit ? "⏰ انتهى الوقت!" : "🎉 تم إنهاء الكويز!"}</strong>
+                                    <div style="color:var(--muted);margin-top:8px;">
+                                        إجابات صحيحة: ${correct} / ${quizQuestions.length}
+                                        <br>وقت الكويز: ${minutes}:${seconds}
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="score-number">${totalScore} XP</div>
-                        `;
+                                <div class="score-number">${totalScore} XP</div>
+                            `;
         }
 
         function showSavedQuizResult() {
@@ -2053,15 +2143,15 @@
             const result = document.getElementById("quizResult");
             result.style.display = "flex";
             result.innerHTML = `
-                            <div>
-                                <strong>✓ نتيجتك محفوظة</strong>
-                                <div style="color:var(--muted);margin-top:8px;">
-                                    نقاط الكويز: ${quizScore} XP
-                                    <br>وقت الكويز: ${minutes}:${seconds}
+                                <div>
+                                    <strong>✓ نتيجتك محفوظة</strong>
+                                    <div style="color:var(--muted);margin-top:8px;">
+                                        نقاط الكويز: ${quizScore} XP
+                                        <br>وقت الكويز: ${minutes}:${seconds}
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="score-number">${totalScore} XP</div>
-                        `;
+                                <div class="score-number">${totalScore} XP</div>
+                            `;
         }
 
         async function saveLeaderboard() {
@@ -2069,10 +2159,11 @@
 
             const data = {
                 name: userName,
-                room_score: score,
-                quiz_score: quizScore,
-                total_score: score + quizScore,
-                quiz_time_seconds: quizTimeSeconds,
+                room_score: Number(score) || 0,
+                quiz_score: Number(quizScore) || 0,
+                total_score: (Number(score) || 0) + (Number(quizScore) || 0),
+                quiz_time_seconds:
+                    quizTimeSeconds === null ? null : Number(quizTimeSeconds),
                 updated_at: new Date().toISOString()
             };
 
@@ -2090,17 +2181,21 @@
                         .from("leaderboard")
                         .update(data)
                         .eq("id", existing[0].id);
+
                     if (error) throw error;
                 } else {
                     const { error } = await supabaseClient
                         .from("leaderboard")
                         .insert(data);
+
                     if (error) throw error;
                 }
 
-                await loadLeaderboard();
+                console.log("Leaderboard saved:", data);
+                return true;
             } catch (error) {
                 console.error("Leaderboard save error:", error);
+                return false;
             }
         }
 
@@ -2108,7 +2203,8 @@
             const container = document.getElementById("leaderboardContent");
 
             if (!window.supabaseReady) {
-                container.innerHTML = '<div class="leaderboard-empty">تعذر الاتصال بقاعدة البيانات.</div>';
+                container.innerHTML =
+                    '<div class="leaderboard-empty">تعذر الاتصال بقاعدة البيانات.</div>';
                 return;
             }
 
@@ -2121,54 +2217,71 @@
                 if (error) throw error;
 
                 const sortedRows = [...(rows || [])].sort((a, b) => {
-                    const scoreDiff = (b.total_score || 0) - (a.total_score || 0);
+                    const scoreDiff =
+                        (Number(b.total_score) || 0) -
+                        (Number(a.total_score) || 0);
+
                     if (scoreDiff !== 0) return scoreDiff;
-                    return (a.quiz_time_seconds ?? Infinity) - (b.quiz_time_seconds ?? Infinity);
+
+                    const at = a.quiz_time_seconds == null
+                        ? Infinity
+                        : Number(a.quiz_time_seconds);
+
+                    const bt = b.quiz_time_seconds == null
+                        ? Infinity
+                        : Number(b.quiz_time_seconds);
+
+                    return at - bt;
                 });
 
                 if (!sortedRows.length) {
-                    container.innerHTML = '<div class="leaderboard-empty">لا توجد نتائج حتى الآن.</div>';
+                    container.innerHTML =
+                        '<div class="leaderboard-empty">لا توجد نتائج حتى الآن.</div>';
                     return;
                 }
 
                 container.innerHTML = `
-                            <div style="overflow-x:auto;">
-                                <table class="leaderboard-table">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>المتدرب</th>
-                                            <th>الغرف</th>
-                                            <th>الكويز</th>
-                                            <th>المجموع</th>
-                                            <th>الوقت</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        ${sortedRows.map((row, index) => {
+                        <div style="overflow-x:auto;">
+                            <table class="leaderboard-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>المتدرب</th>
+                                        <th>الغرف</th>
+                                        <th>الكويز</th>
+                                        <th>المجموع</th>
+                                        <th>الوقت</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${sortedRows.map((row, index) => {
                     const t = row.quiz_time_seconds;
-                    const time = t == null ? "—" : `${String(Math.floor(t / 60)).padStart(2, "0")}:${String(t % 60).padStart(2, "0")}`;
+                    const time = t == null
+                        ? "—"
+                        : `${String(Math.floor(Number(t) / 60)).padStart(2, "0")}:${String(Number(t) % 60).padStart(2, "0")}`;
+
                     return `
-                                                <tr>
-                                                    <td class="rank">${index + 1}</td>
-                                                    <td>${escapeHTML(String(row.name || ""))}</td>
-                                                    <td>${row.room_score || 0}</td>
-                                                    <td>${row.quiz_score || 0}</td>
-                                                    <td><strong>${row.total_score || 0}</strong></td>
-                                                    <td>${time}</td>
-                                                </tr>
-                                            `;
+                                            <tr>
+                                                <td class="rank">${index + 1}</td>
+                                                <td>${escapeHTML(String(row.name || ""))}</td>
+                                                <td>${Number(row.room_score) || 0}</td>
+                                                <td>${Number(row.quiz_score) || 0}</td>
+                                                <td><strong>${Number(row.total_score) || 0}</strong></td>
+                                                <td>${time}</td>
+                                            </tr>
+                                        `;
                 }).join("")}
-                                    </tbody>
-                                </table>
-                            </div>
-                        `;
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
             } catch (error) {
-                container.innerHTML = '<div class="leaderboard-empty">تعذر تحميل الترتيب. تأكدي من صلاحيات Supabase (RLS).</div>';
+                container.innerHTML =
+                    '<div class="leaderboard-empty">تعذر تحميل الترتيب. تأكدي من صلاحيات Supabase (RLS) ومن اسم جدول leaderboard.</div>';
+
                 console.error("Leaderboard load error:", error);
             }
         }
-
 
         document.addEventListener("change", async function (event) {
             const target = event.target;
@@ -2181,6 +2294,8 @@
             quizAnswers[index] = Number(target.value);
             answers.quiz = quizAnswers;
             await saveProgress();
+            await saveLeaderboard();
+            await loadLeaderboard();
         });
 
         /* ============================================================
