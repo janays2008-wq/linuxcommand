@@ -1199,7 +1199,7 @@
                 challengeStartedAt = Date.now();
             }
 
-            localStorage.setItem("cyberBathUser", name);
+            localStorage.setItem("cyberpathUser", name);
 
             const message = document.getElementById("userMessage");
             message.innerHTML =
@@ -1231,7 +1231,7 @@
 
         function loadUser() {
 
-            const saved = localStorage.getItem("cyberBathUser");
+            const saved = localStorage.getItem("cyberPathUser");
 
             if (saved) {
 
@@ -1845,7 +1845,7 @@
         ============================================================ */
 
         function saveLocalProgress() {
-            localStorage.setItem("cyberBathProgress", JSON.stringify({
+            localStorage.setItem("cyberathProgress", JSON.stringify({
                 name: userName,
                 score,
                 completedTasks: Array.from(completedTasks),
@@ -1941,7 +1941,7 @@
 
         async function loadProgress() {
             // نسخة الجهاز أولاً
-            const local = localStorage.getItem("cyberBathProgress");
+            const local = localStorage.getItem("cyberPathProgress");
 
             if (local) {
                 try {
